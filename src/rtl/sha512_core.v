@@ -43,11 +43,11 @@ module sha512_core(
                  
                    input wire            init,
                    input wire            next,
-
+                   input wore [1 : 0]    mode,
+                   
                    input wire [1023 : 0] block,
                    
                    output wire           ready,
-                    
                    output wire [511 : 0] digest,
                    output wire           digest_valid
                   );
