@@ -59,23 +59,23 @@ module sha512_w_mem(
   //----------------------------------------------------------------
   // Registers including update variables and write enable.
   //----------------------------------------------------------------
-  reg [31 : 0] w_mem [0 : 15];
-  reg [31 : 0] w_mem00_new;
-  reg [31 : 0] w_mem01_new;
-  reg [31 : 0] w_mem02_new;
-  reg [31 : 0] w_mem03_new;
-  reg [31 : 0] w_mem04_new;
-  reg [31 : 0] w_mem05_new;
-  reg [31 : 0] w_mem06_new;
-  reg [31 : 0] w_mem07_new;
-  reg [31 : 0] w_mem08_new;
-  reg [31 : 0] w_mem09_new;
-  reg [31 : 0] w_mem10_new;
-  reg [31 : 0] w_mem11_new;
-  reg [31 : 0] w_mem12_new;
-  reg [31 : 0] w_mem13_new;
-  reg [31 : 0] w_mem14_new;
-  reg [31 : 0] w_mem15_new;
+  reg [63 : 0] w_mem [0 : 15];
+  reg [63 : 0] w_mem00_new;
+  reg [63 : 0] w_mem01_new;
+  reg [63 : 0] w_mem02_new;
+  reg [63 : 0] w_mem03_new;
+  reg [63 : 0] w_mem04_new;
+  reg [63 : 0] w_mem05_new;
+  reg [63 : 0] w_mem06_new;
+  reg [63 : 0] w_mem07_new;
+  reg [63 : 0] w_mem08_new;
+  reg [63 : 0] w_mem09_new;
+  reg [63 : 0] w_mem10_new;
+  reg [63 : 0] w_mem11_new;
+  reg [63 : 0] w_mem12_new;
+  reg [63 : 0] w_mem13_new;
+  reg [63 : 0] w_mem14_new;
+  reg [63 : 0] w_mem15_new;
   reg          w_mem_we;
   
   reg [5 : 0] w_ctr_reg;
@@ -92,8 +92,8 @@ module sha512_w_mem(
   //----------------------------------------------------------------
   // Wires.
   //----------------------------------------------------------------
-  reg [31 : 0] w_tmp;
-  reg [31 : 0] w_new;
+  reg [63 : 0] w_tmp;
+  reg [63 : 0] w_new;
   
   
   //----------------------------------------------------------------
@@ -193,12 +193,12 @@ module sha512_w_mem(
   //----------------------------------------------------------------
   always @*
     begin : w_mem_update_logic
-      reg [31 : 0] w_0;
-      reg [31 : 0] w_1;
-      reg [31 : 0] w_9;
-      reg [31 : 0] w_14;
-      reg [31 : 0] d0;
-      reg [31 : 0] d1;
+      reg [63 : 0] w_0;
+      reg [63 : 0] w_1;
+      reg [63 : 0] w_9;
+      reg [63 : 0] w_14;
+      reg [63 : 0] d0;
+      reg [63 : 0] d1;
 
       w_mem00_new = 32'h00000000;
       w_mem01_new = 32'h00000000;
@@ -223,13 +223,13 @@ module sha512_w_mem(
       w_9  = w_mem[9];
       w_14 = w_mem[14];
 
-      d0 = {w_1[6  : 0], w_1[31 :  7]} ^ 
-           {w_1[17 : 0], w_1[31 : 18]} ^ 
-           {3'b000, w_1[31 : 3]};
+      d0 = {w_1[6  : 0], w_1[63 :  7]} ^ 
+           {w_1[17 : 0], w_1[63 : 18]} ^ 
+           {3'b000, w_1[63 : 3]};
       
-      d1 = {w_14[16 : 0], w_14[31 : 17]} ^ 
-           {w_14[18 : 0], w_14[31 : 19]} ^ 
-           {10'b0000000000, w_14[31 : 10]};
+      d1 = {w_14[16 : 0], w_14[63 : 17]} ^ 
+           {w_14[18 : 0], w_14[63 : 19]} ^ 
+           {10'b0000000000, w_14[63 : 10]};
       
       w_new = d1 + w_9 + d0 + w_0;
       
