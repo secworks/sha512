@@ -38,14 +38,14 @@
 //======================================================================
 
 module sha512_w_mem(
-                    input wire           clk,
-                    input wire           reset_n,
+                    input wire            clk,
+                    input wire            reset_n,
 
-                    input wire [511 : 0] block,
+                    input wire [1023 : 0] block,
 
-                    input wire           init,
-                    input wire           next,
-                    output wire [31 : 0] w
+                    input wire            init,
+                    input wire            next,
+                    output wire [63 : 0]  w
                    );
 
   
