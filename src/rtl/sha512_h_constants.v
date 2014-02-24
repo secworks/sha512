@@ -86,53 +86,53 @@ module sha512_h_constants(
         0:
           begin
             // SHA-512/224
-            tmp_H0 = 8C3D37C819544DA2;
-            tmp_H1 = 73E1996689DCD4D6;
-            tmp_H2 = 1DFAB7AE32FF9C82;
-            tmp_H3 = 679DD514582F9FCF;
-            tmp_H4 = 0F6D2B697BD44DA8;
-            tmp_H5 = 77E36F7304C48942;
-            tmp_H6 = 3F9D85A86A1D36C8;
-            tmp_H7 = 1112E6AD91D692A1;
+            tmp_H0 = 64'h8c3d37c819544da2;
+            tmp_H1 = 64'h73e1996689dcd4d6;
+            tmp_H2 = 64'h1dfab7ae32ff9c82;
+            tmp_H3 = 64'h679dd514582f9fcf;
+            tmp_H4 = 64'h0f6d2b697bd44da8;
+            tmp_H5 = 64'h77e36f7304c48942;
+            tmp_H6 = 64'h3f9d85a86a1d36c8;
+            tmp_H7 = 64'h1112e6ad91d692a1;
           end
 
         1:
           begin
             // SHA-512/256
-            tmp_H0 = 22312194FC2BF72C; 
-            tmp_H0 = 9F555FA3C84C64C2; 
-            tmp_H0 = 2393B86B6F53B151; 
-            tmp_H0 = 963877195940EABD; 
-            tmp_H0 = 96283EE2A88EFFE3; 
-            tmp_H0 = BE5E1E2553863992; 
-            tmp_H0 = 2B0199FC2C85B8AA; 
-            tmp_H0 = 0EB72DDC81C52CA2;
+            tmp_H0 = 64'h22312194fc2bf72c; 
+            tmp_H0 = 64'h9f555fa3c84c64c2; 
+            tmp_H0 = 64'h2393b86b6f53b151; 
+            tmp_H0 = 64'h963877195940eabd; 
+            tmp_H0 = 64'h96283ee2a88effe3; 
+            tmp_H0 = 64'hbe5e1e2553863992; 
+            tmp_H0 = 64'h2b0199fc2c85b8aa; 
+            tmp_H0 = 64'h0eb72ddc81c52ca2;
           end
         
         2:
           begin
             // SHA-384
-            tmp_H0 = cbbb9d5dc1059ed8;
-            tmp_H1 = 629a292a367cd507;
-            tmp_H2 = 9159015a3070dd17; 
-            tmp_H3 = 152fecd8f70e5939; 
-            tmp_H4 = 67332667ffc00b31; 
-            tmp_H5 = 8eb44a8768581511; 
-            tmp_H6 = db0c2e0d64f98fa7; 
-            tmp_H7 = 47b5481dbefa4fa4;
+            tmp_H0 = 64'hcbbb9d5dc1059ed8;
+            tmp_H1 = 64'h629a292a367cd507;
+            tmp_H2 = 64'h9159015a3070dd17; 
+            tmp_H3 = 64'h152fecd8f70e5939; 
+            tmp_H4 = 64'h67332667ffc00b31; 
+            tmp_H5 = 64'h8eb44a8768581511; 
+            tmp_H6 = 64'hdb0c2e0d64f98fa7; 
+            tmp_H7 = 64'h47b5481dbefa4fa4;
           end
         
         3:
           begin
             // SHA-512
-            tmp_H0 = 6a09e667f3bcc908;
-            tmp_H0 = bb67ae8584caa73b;
-            tmp_H0 = 3c6ef372fe94f82b; 
-            tmp_H0 = a54ff53a5f1d36f1; 
-            tmp_H0 = 510e527fade682d1; 
-            tmp_H0 = 9b05688c2b3e6c1f; 
-            tmp_H0 = 1f83d9abfb41bd6b; 
-            tmp_H0 = 5be0cd19137e2179;  
+            tmp_H0 = 64'h6a09e667f3bcc908;
+            tmp_H0 = 64'hbb67ae8584caa73b;
+            tmp_H0 = 64'h3c6ef372fe94f82b; 
+            tmp_H0 = 64'ha54ff53a5f1d36f1; 
+            tmp_H0 = 64'h510e527fade682d1; 
+            tmp_H0 = 64'h9b05688c2b3e6c1f; 
+            tmp_H0 = 64'h1f83d9abfb41bd6b; 
+            tmp_H0 = 64'h5be0cd19137e2179;  
           end
       endcase // case (addr)
     end // block: mode_mux
