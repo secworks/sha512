@@ -112,22 +112,22 @@ module sha512_w_mem(
     begin : reg_update
       if (!reset_n)
         begin
-          w_mem[00]             <= 32'h00000000;
-          w_mem[01]             <= 32'h00000000;
-          w_mem[02]             <= 32'h00000000;
-          w_mem[03]             <= 32'h00000000;
-          w_mem[04]             <= 32'h00000000;
-          w_mem[05]             <= 32'h00000000;
-          w_mem[06]             <= 32'h00000000;
-          w_mem[07]             <= 32'h00000000;
-          w_mem[08]             <= 32'h00000000;
-          w_mem[09]             <= 32'h00000000;
-          w_mem[10]             <= 32'h00000000;
-          w_mem[11]             <= 32'h00000000;
-          w_mem[12]             <= 32'h00000000;
-          w_mem[13]             <= 32'h00000000;
-          w_mem[14]             <= 32'h00000000;
-          w_mem[15]             <= 32'h00000000;
+          w_mem[00]             <= 64'h0000000000000000;
+          w_mem[01]             <= 64'h0000000000000000;
+          w_mem[02]             <= 64'h0000000000000000;
+          w_mem[03]             <= 64'h0000000000000000;
+          w_mem[04]             <= 64'h0000000000000000;
+          w_mem[05]             <= 64'h0000000000000000;
+          w_mem[06]             <= 64'h0000000000000000;
+          w_mem[07]             <= 64'h0000000000000000;
+          w_mem[08]             <= 64'h0000000000000000;
+          w_mem[09]             <= 64'h0000000000000000;
+          w_mem[10]             <= 64'h0000000000000000;
+          w_mem[11]             <= 64'h0000000000000000;
+          w_mem[12]             <= 64'h0000000000000000;
+          w_mem[13]             <= 64'h0000000000000000;
+          w_mem[14]             <= 64'h0000000000000000;
+          w_mem[15]             <= 64'h0000000000000000;
           w_ctr_reg             <= 6'h00;
           sha512_w_mem_ctrl_reg <= CTRL_IDLE;
         end
@@ -200,22 +200,22 @@ module sha512_w_mem(
       reg [63 : 0] d0;
       reg [63 : 0] d1;
 
-      w_mem00_new = 32'h00000000;
-      w_mem01_new = 32'h00000000;
-      w_mem02_new = 32'h00000000;
-      w_mem03_new = 32'h00000000;
-      w_mem04_new = 32'h00000000;
-      w_mem05_new = 32'h00000000;
-      w_mem06_new = 32'h00000000;
-      w_mem07_new = 32'h00000000;
-      w_mem08_new = 32'h00000000;
-      w_mem09_new = 32'h00000000;
-      w_mem10_new = 32'h00000000;
-      w_mem11_new = 32'h00000000;
-      w_mem12_new = 32'h00000000;
-      w_mem13_new = 32'h00000000;
-      w_mem14_new = 32'h00000000;
-      w_mem15_new = 32'h00000000;
+      w_mem00_new = 64'h0000000000000000;
+      w_mem01_new = 64'h0000000000000000;
+      w_mem02_new = 64'h0000000000000000;
+      w_mem03_new = 64'h0000000000000000;
+      w_mem04_new = 64'h0000000000000000;
+      w_mem05_new = 64'h0000000000000000;
+      w_mem06_new = 64'h0000000000000000;
+      w_mem07_new = 64'h0000000000000000;
+      w_mem08_new = 64'h0000000000000000;
+      w_mem09_new = 64'h0000000000000000;
+      w_mem10_new = 64'h0000000000000000;
+      w_mem11_new = 64'h0000000000000000;
+      w_mem12_new = 64'h0000000000000000;
+      w_mem13_new = 64'h0000000000000000;
+      w_mem14_new = 64'h0000000000000000;
+      w_mem15_new = 64'h0000000000000000;
       w_mem_we    = 0;
       
       w_0  = w_mem[0];
@@ -235,22 +235,22 @@ module sha512_w_mem(
       
       if (init)
         begin
-          w_mem00_new = block[511 : 480];
-          w_mem01_new = block[479 : 448];
-          w_mem02_new = block[447 : 416];
-          w_mem03_new = block[415 : 384];
-          w_mem04_new = block[383 : 352];
-          w_mem05_new = block[351 : 320];
-          w_mem06_new = block[319 : 288];
-          w_mem07_new = block[287 : 512];
-          w_mem08_new = block[255 : 224];
-          w_mem09_new = block[223 : 192];
-          w_mem10_new = block[191 : 160];
-          w_mem11_new = block[159 : 128];
-          w_mem12_new = block[127 :  96];
-          w_mem13_new = block[95  :  64];
-          w_mem14_new = block[63  :  32];
-          w_mem15_new = block[31  :   0];
+          w_mem00_new = block[1023 : 960];
+          w_mem01_new = block[959  : 896];
+          w_mem02_new = block[895  : 832];
+          w_mem03_new = block[831  : 768];
+          w_mem04_new = block[767  : 704];
+          w_mem05_new = block[703  : 640];
+          w_mem06_new = block[639  : 576];
+          w_mem07_new = block[575  : 512];
+          w_mem08_new = block[511  : 448];
+          w_mem09_new = block[447  : 384];
+          w_mem10_new = block[383  : 320];
+          w_mem11_new = block[319  : 256];
+          w_mem12_new = block[255  : 192];
+          w_mem13_new = block[191  : 128];
+          w_mem14_new = block[127  :  64];
+          w_mem15_new = block[63   :   0];
           w_mem_we    = 1;
         end
       else if (w_ctr_reg > 15)
