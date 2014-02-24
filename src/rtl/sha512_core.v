@@ -43,7 +43,7 @@ module sha512_core(
                  
                    input wire            init,
                    input wire            next,
-                   input wore [1 : 0]    mode,
+                   input wire [1 : 0]    mode,
                    
                    input wire [1023 : 0] block,
                    
@@ -56,16 +56,7 @@ module sha512_core(
   //----------------------------------------------------------------
   // Internal constant and parameter definitions.
   //----------------------------------------------------------------
-  parameter H0_0 = 32'h6a09e667;
-  parameter H0_1 = 32'hbb67ae85;
-  parameter H0_2 = 32'h3c6ef372;
-  parameter H0_3 = 32'ha54ff53a;
-  parameter H0_4 = 32'h510e527f;
-  parameter H0_5 = 32'h9b05688c;
-  parameter H0_6 = 32'h1f83d9ab;
-  parameter H0_7 = 32'h5be0cd19;
-
-  parameter SHA512_ROUNDS = 63;
+  parameter SHA512_ROUNDS = 79;
   
   parameter CTRL_IDLE   = 0;
   parameter CTRL_ROUNDS = 1;
@@ -75,40 +66,40 @@ module sha512_core(
   //----------------------------------------------------------------
   // Registers including update variables and write enable.
   //----------------------------------------------------------------
-  reg [31 : 0] a_reg;
-  reg [31 : 0] a_new;
-  reg [31 : 0] b_reg;
-  reg [31 : 0] b_new;
-  reg [31 : 0] c_reg;
-  reg [31 : 0] c_new;
-  reg [31 : 0] d_reg;
-  reg [31 : 0] d_new;
-  reg [31 : 0] e_reg;
-  reg [31 : 0] e_new;
-  reg [31 : 0] f_reg;
-  reg [31 : 0] f_new;
-  reg [31 : 0] g_reg;
-  reg [31 : 0] g_new;
-  reg [31 : 0] h_reg;
-  reg [31 : 0] h_new;
+  reg [63 : 0] a_reg;
+  reg [63 : 0] a_new;
+  reg [63 : 0] b_reg;
+  reg [63 : 0] b_new;
+  reg [63 : 0] c_reg;
+  reg [63 : 0] c_new;
+  reg [63 : 0] d_reg;
+  reg [63 : 0] d_new;
+  reg [63 : 0] e_reg;
+  reg [63 : 0] e_new;
+  reg [63 : 0] f_reg;
+  reg [63 : 0] f_new;
+  reg [63 : 0] g_reg;
+  reg [63 : 0] g_new;
+  reg [63 : 0] h_reg;
+  reg [63 : 0] h_new;
   reg          a_h_we;
 
-  reg [31 : 0] H0_reg;
-  reg [31 : 0] H0_new;
-  reg [31 : 0] H1_reg;
-  reg [31 : 0] H1_new;
-  reg [31 : 0] H2_reg;
-  reg [31 : 0] H2_new;
-  reg [31 : 0] H3_reg;
-  reg [31 : 0] H3_new;
-  reg [31 : 0] H4_reg;
-  reg [31 : 0] H4_new;
-  reg [31 : 0] H5_reg;
-  reg [31 : 0] H5_new;
-  reg [31 : 0] H6_reg;
-  reg [31 : 0] H6_new;
-  reg [31 : 0] H7_reg;
-  reg [31 : 0] H7_new;
+  reg [63 : 0] H0_reg;
+  reg [63 : 0] H0_new;
+  reg [63 : 0] H1_reg;
+  reg [63 : 0] H1_new;
+  reg [63 : 0] H2_reg;
+  reg [63 : 0] H2_new;
+  reg [63 : 0] H3_reg;
+  reg [63 : 0] H3_new;
+  reg [63 : 0] H4_reg;
+  reg [63 : 0] H4_new;
+  reg [63 : 0] H5_reg;
+  reg [63 : 0] H5_new;
+  reg [63 : 0] H6_reg;
+  reg [63 : 0] H6_new;
+  reg [63 : 0] H7_reg;
+  reg [63 : 0] H7_new;
   reg          H_we;
   
   reg [5 : 0] t_ctr_reg;
@@ -139,15 +130,24 @@ module sha512_core(
 
   reg ready_flag;
 
-  reg [31 : 0] t1;
-  reg [31 : 0] t2;
+  reg [63 : 0] t1;
+  reg [63 : 0] t2;
 
-  wire [31 : 0] k_data;
+  wire [63 : 0] k_data;
 
   reg           w_init;
   reg           w_next;
-  wire [31 : 0] w_data;
+  wire [63 : 0] w_data;
               
+  reg [63 : 0] H0_0;
+  reg [63 : 0] H0_1;
+  reg [63 : 0] H0_2;
+  reg [63 : 0] H0_3;
+  reg [63 : 0] H0_4;
+  reg [63 : 0] H0_5;
+  reg [63 : 0] H0_6;
+  reg [63 : 0] H0_7;
+
   
   //----------------------------------------------------------------
   // Module instantiantions.
@@ -156,6 +156,20 @@ module sha512_core(
                                  .addr(t_ctr_reg),
                                  .K(k_data)
                                  );
+
+  
+  sha512_h_constants h_constants(
+                                 .mode(mode),
+                                 
+                                 .H0(H0_0),
+                                 .H1(H0_1),
+                                 .H2(H0_2),
+                                 .H3(H0_3),
+                                 .H4(H0_4),
+                                 .H5(H0_5),
+                                 .H6(H0_6),
+                                 .H7(H0_7)
+                                );  
 
 
   sha512_w_mem w_mem(
@@ -191,22 +205,22 @@ module sha512_core(
     begin : reg_update
       if (!reset_n)
         begin
-          a_reg            <= 32'h00000000;
-          b_reg            <= 32'h00000000;
-          c_reg            <= 32'h00000000;
-          d_reg            <= 32'h00000000;
-          e_reg            <= 32'h00000000;
-          f_reg            <= 32'h00000000;
-          g_reg            <= 32'h00000000;
-          h_reg            <= 32'h00000000;
-          H0_reg           <= 32'h00000000;
-          H1_reg           <= 32'h00000000;
-          H2_reg           <= 32'h00000000;
-          H3_reg           <= 32'h00000000;
-          H4_reg           <= 32'h00000000;
-          H5_reg           <= 32'h00000000;
-          H6_reg           <= 32'h00000000;
-          H7_reg           <= 32'h00000000;
+          a_reg            <= 64'h00000000;
+          b_reg            <= 64'h00000000;
+          c_reg            <= 64'h00000000;
+          d_reg            <= 64'h00000000;
+          e_reg            <= 64'h00000000;
+          f_reg            <= 64'h00000000;
+          g_reg            <= 64'h00000000;
+          h_reg            <= 64'h00000000;
+          H0_reg           <= 64'h00000000;
+          H1_reg           <= 64'h00000000;
+          H2_reg           <= 64'h00000000;
+          H3_reg           <= 64'h00000000;
+          H4_reg           <= 64'h00000000;
+          H5_reg           <= 64'h00000000;
+          H6_reg           <= 64'h00000000;
+          H7_reg           <= 64'h00000000;
           digest_valid_reg <= 0;
           t_ctr_reg        <= 6'b000000;
           sha512_ctrl_reg  <= CTRL_IDLE;
@@ -263,14 +277,14 @@ module sha512_core(
   //----------------------------------------------------------------
   always @*
     begin : digest_logic
-      H0_new = 32'h00000000;
-      H1_new = 32'h00000000;
-      H2_new = 32'h00000000;
-      H3_new = 32'h00000000;
-      H4_new = 32'h00000000;
-      H5_new = 32'h00000000;
-      H6_new = 32'h00000000;
-      H7_new = 32'h00000000;
+      H0_new = 64'h00000000;
+      H1_new = 64'h00000000;
+      H2_new = 64'h00000000;
+      H3_new = 64'h00000000;
+      H4_new = 64'h00000000;
+      H5_new = 64'h00000000;
+      H6_new = 64'h00000000;
+      H7_new = 64'h00000000;
       H_we = 0;
 
       if (digest_init)
@@ -308,8 +322,8 @@ module sha512_core(
   //----------------------------------------------------------------
   always @*
     begin : t1_logic
-      reg [31 : 0] sum1;
-      reg [31 : 0] ch;
+      reg [63 : 0] sum1;
+      reg [63 : 0] ch;
 
       sum1 = {e_reg[5  : 0], e_reg[31 :  6]} ^ 
              {e_reg[10 : 0], e_reg[31 : 11]} ^ 
@@ -328,8 +342,8 @@ module sha512_core(
   //----------------------------------------------------------------
   always @*
     begin : t2_logic
-      reg [31 : 0] sum0;
-      reg [31 : 0] maj;
+      reg [63 : 0] sum0;
+      reg [63 : 0] maj;
 
       sum0 = {a_reg[1  : 0], a_reg[31 :  2]} ^
              {a_reg[12 : 0], a_reg[31 : 13]} ^
@@ -349,17 +363,17 @@ module sha512_core(
   //----------------------------------------------------------------
   always @*
     begin : state_logic
-      reg [31 : 0] tmp1;
-      reg [31 : 0] tmp2;
+      reg [63 : 0] tmp1;
+      reg [63 : 0] tmp2;
       
-      a_new  = 32'h00000000;
-      b_new  = 32'h00000000;
-      c_new  = 32'h00000000;
-      d_new  = 32'h00000000;
-      e_new  = 32'h00000000;
-      f_new  = 32'h00000000;
-      g_new  = 32'h00000000;
-      h_new  = 32'h00000000;
+      a_new  = 64'h00000000;
+      b_new  = 64'h00000000;
+      c_new  = 64'h00000000;
+      d_new  = 64'h00000000;
+      e_new  = 64'h00000000;
+      f_new  = 64'h00000000;
+      g_new  = 64'h00000000;
+      h_new  = 64'h00000000;
       a_h_we = 0;
       
       if (state_init)
