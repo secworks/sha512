@@ -63,7 +63,7 @@ module sha512_k_constants(
           begin
             tmp_K = 64'h428a2f98d728ae22;
           end
-
+        
         1:
           begin
             tmp_K = 64'h7137449123ef65cd;
@@ -73,52 +73,52 @@ module sha512_k_constants(
           begin
             tmp_K = 64'hb5c0fbcfec4d3b2f;
           end
-        
+
         3:
           begin
             tmp_K = 64'he9b5dba58189dbbc;
           end
-        
+
         4:
           begin
             tmp_K = 64'h3956c25bf348b538;
           end
-        
+
         5:
           begin
             tmp_K = 64'h59f111f1b605d019;
           end
-        
+
         6:
           begin
             tmp_K = 64'h923f82a4af194f9b;
           end
-        
+
         7:
           begin
             tmp_K = 64'hab1c5ed5da6d8118;
           end
-        
+
         8:
           begin
             tmp_K = 64'hd807aa98a3030242;
           end
-        
+
         9:
           begin
             tmp_K = 64'h12835b0145706fbe;
           end
-        
+
         10:
           begin
             tmp_K = 64'h243185be4ee4b28c;
           end
-        
+
         11:
           begin
             tmp_K = 64'h550c7dc3d5ffb4e2;
           end
-  
+
         12:
           begin
             tmp_K = 64'h72be5d74f27b896f;
@@ -133,27 +133,27 @@ module sha512_k_constants(
           begin
             tmp_K = 64'h9bdc06a725c71235;
           end
-
+        
         15:
           begin
             tmp_K = 64'hc19bf174cf692694;
-          end  
-
-        16:        
-          begin      
+          end
+        
+        16:
+          begin
             tmp_K = 64'he49b69c19ef14ad2;
-          end                  
-          
+          end
+
         17:
           begin
             tmp_K = 64'hefbe4786384f25e3;
           end
-           
+
         18:
           begin
             tmp_K = 64'h0fc19dc68b8cd5b5;
           end
-
+        
         19:
           begin
             tmp_K = 64'h240ca1cc77ac9c65;
@@ -163,7 +163,7 @@ module sha512_k_constants(
           begin
             tmp_K = 64'h2de92c6f592b0275;
           end
-          
+
         21:
           begin
             tmp_K = 64'h4a7484aa6ea6e483;
@@ -173,17 +173,17 @@ module sha512_k_constants(
           begin
             tmp_K = 64'h5cb0a9dcbd41fbd4;
           end
-             
+
         23:
           begin
             tmp_K = 64'h76f988da831153b5;
           end
-  
+
         24:
           begin
             tmp_K = 64'h983e5152ee66dfab;
           end
-  
+        
         25:
           begin
             tmp_K = 64'ha831c66d2db43210;
@@ -193,22 +193,22 @@ module sha512_k_constants(
           begin
             tmp_K = 64'hb00327c898fb213f;
           end
-
+        
         27:
           begin
             tmp_K = 64'hbf597fc7beef0ee4;
           end
-  
+
         28:
           begin
             tmp_K = 64'hc6e00bf33da88fc2;
           end
-  
+
         29:
           begin
             tmp_K = 64'hd5a79147930aa725;
           end
-  
+
         30:
           begin
             tmp_K = 64'h06ca6351e003826f;
@@ -223,7 +223,7 @@ module sha512_k_constants(
           begin
             tmp_K = 64'h27b70a8546d22ffc;
           end
-  
+
         33:
           begin
             tmp_K = 64'h2e1b21385c26c926;
@@ -234,7 +234,7 @@ module sha512_k_constants(
             tmp_K = 64'h4d2c6dfc5ac42aed;
           end
 
-        35:  
+        35:
           begin
             tmp_K = 64'h53380d139d95b3df;
           end
@@ -273,12 +273,12 @@ module sha512_k_constants(
           begin
             tmp_K = 64'hc24b8b70d0f89791;
           end
-
+        
         43:
           begin
             tmp_K = 64'hc76c51a30654be30;
           end
-
+        
         44:
           begin
             tmp_K = 64'hd192e819d6ef5218;
@@ -288,22 +288,22 @@ module sha512_k_constants(
           begin
             tmp_K = 64'hd69906245565a910;
           end
-
+        
         46:
           begin
             tmp_K = 64'hf40e35855771202a;
           end
-
+        
         47:
           begin
             tmp_K = 64'h106aa07032bbd1b8;
           end
-
+        
         48:
           begin
             tmp_K = 64'h19a4c116b8d2d0c8;
           end
-
+        
         49:
           begin
             tmp_K = 64'h1e376c085141ab53;
@@ -336,24 +336,24 @@ module sha512_k_constants(
 
         55:
           begin
-            tmp_K = 64;'h682e6ff3d6b2b8a3;
+            tmp_K = 64'h682e6ff3d6b2b8a3;
           end
 
         56:
           begin
             tmp_K = 64'h748f82ee5defb2fc;
           end
-
+        
         57:
           begin
             tmp_K = 64'h78a5636f43172f60;
           end
-
+        
         58:
           begin
             tmp_K = 64'h84c87814a1f0ab72;
           end
-
+        
         59:
           begin
             tmp_K = 64'h8cc702081a6439ec;
@@ -377,6 +377,91 @@ module sha512_k_constants(
         63:
           begin
             tmp_K = 64'hc67178f2e372532b;
+          end
+
+        64:
+          begin
+            tmp_K = 64'hca273eceea26619c;
+          end
+
+        65:
+          begin
+            tmp_K = 64'hd186b8c721c0c207;
+          end
+
+        66:
+          begin
+            tmp_K = 64'heada7dd6cde0eb1e;
+          end
+
+        67:
+          begin
+            tmp_K = 64'hf57d4f7fee6ed178;
+          end
+
+        68:
+          begin
+            tmp_K = 64'h06f067aa72176fba;
+          end
+
+        69:
+          begin
+            tmp_K = 64'h0a637dc5a2c898a6;
+          end
+
+        70:
+          begin
+            tmp_K = 64'h113f9804bef90dae;
+          end
+
+        71:
+          begin
+            tmp_K = 64'h1b710b35131c471b;
+          end
+
+        72:
+          begin
+            tmp_K = 64'h28db77f523047d84;
+          end
+
+        73:
+          begin
+            tmp_K = 64'h32caab7b40c72493;
+          end
+
+        74:
+          begin
+            tmp_K = 64'h3c9ebe0a15c9bebc;
+          end
+
+        75:
+          begin
+            tmp_K = 64'h431d67c49c100d4c;
+          end
+        
+        76:
+          begin
+            tmp_K = 64'h4cc5d4becb3e42b6;
+          end
+
+        77:
+          begin
+            tmp_K = 64'h597f299cfc657e2a;
+          end
+
+        78:
+          begin
+            tmp_K = 64'h5fcb6fab3ad6faec;
+          end
+        
+        79:
+          begin
+            tmp_K = 64'h6c44198c4a475817;
+          end
+
+        default:
+          begin
+            tmp_K = 64'h0000000000000000;
           end
       endcase // case (addr)
     end // block: addr_mux
