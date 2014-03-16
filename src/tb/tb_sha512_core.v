@@ -258,9 +258,10 @@ module tb_sha512_core();
   //
   // Run a test case spanning a single data block.
   //----------------------------------------------------------------
-  task single_block_test(input [7 : 0]   tc_number,
-                         input [511 : 0] block,
-                         input [255 : 0] expected);
+  task single_block_test(input [7 : 0]    tc_number,
+                         input [1 : 0]    mode,
+                         input [1023 : 0] block,
+                         input [511 : 0]  expected);
    begin
      $display("*** TC %0d single block test case started.", tc_number);
      tc_ctr = tc_ctr + 1;
@@ -296,11 +297,12 @@ module tb_sha512_core();
   // Run a test case spanning two data blocks. We check both
   // intermediate and final digest.
   //----------------------------------------------------------------
-  task double_block_test(input [7 : 0]   tc_number,
-                         input [511 : 0] block1,
-                         input [255 : 0] expected1,
-                         input [511 : 0] block2,
-                         input [255 : 0] expected2);
+  task double_block_test(input [7 : 0]    tc_number,
+                         input [1 : 0]    mode,
+                         input [1023 : 0] block1,
+                         input [511 : 0]  expected1,
+                         input [1023 : 0] block2,
+                         input [511 : 0]  expected2);
 
      reg [255 : 0] db_digest1;
      reg           db_error;
