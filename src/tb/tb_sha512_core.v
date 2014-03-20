@@ -274,6 +274,7 @@ module tb_sha512_core();
      tc_ctr = tc_ctr + 1;
 
      tb_block = block;
+     tb_mode  = mode;
      tb_init = 1;
      #(CLK_PERIOD);
      tb_init = 0;
