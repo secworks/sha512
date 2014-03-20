@@ -53,6 +53,12 @@ module tb_sha512_core();
   parameter DEBUG = 0;
 
   parameter CLK_HALF_PERIOD = 2;
+
+  parameter MODE_SHA_512_224 = 0;
+  parameter MODE_SHA_512_256 = 1;
+  parameter MODE_SHA_384     = 2;
+  parameter MODE_SHA_512     = 3;
+  
   
   
   //----------------------------------------------------------------
@@ -258,8 +264,7 @@ module tb_sha512_core();
   //
   // Run a test case spanning a single data block.
   //----------------------------------------------------------------
-  task single_block_test(input [7 : 0]    tc_number,
-                         input [1 : 0]    mode,
+  task single_block_test(input [1 : 0]    mode,
                          input [1023 : 0] block,
                          input [511 : 0]  expected);
    begin
@@ -297,71 +302,71 @@ module tb_sha512_core();
   // Run a test case spanning two data blocks. We check both
   // intermediate and final digest.
   //----------------------------------------------------------------
-  task double_block_test(input [7 : 0]    tc_number,
-                         input [1 : 0]    mode,
-                         input [1023 : 0] block1,
-                         input [511 : 0]  expected1,
-                         input [1023 : 0] block2,
-                         input [511 : 0]  expected2);
-
-     reg [255 : 0] db_digest1;
-     reg           db_error;
-   begin
-     $display("*** TC %0d double block test case started.", tc_number);
-     db_error = 0;
-     tc_ctr = tc_ctr + 1;
-
-     $display("*** TC %0d first block started.", tc_number);
-     tb_block = block1;
-     tb_init = 1;
-     #(2 * CLK_HALF_PERIOD);
-     tb_init = 0;
-     wait_ready();
-     db_digest1 = tb_digest;
-     $display("*** TC %0d first block done.", tc_number);
-     
-     $display("*** TC %0d second block started.", tc_number);
-     tb_block = block2;
-     tb_next = 1;
-     #(2 * CLK_HALF_PERIOD);
-     tb_next = 0;
-     wait_ready();
-     $display("*** TC %0d second block done.", tc_number);
-      
-     if (db_digest1 == expected1)
-       begin
-         $display("*** TC %0d first block successful", tc_number);
-         $display("");
-       end 
-     else
-       begin
-         $display("*** ERROR: TC %0d first block NOT successful", tc_number);
-         $display("Expected: 0x%064x", expected1);
-         $display("Got:      0x%064x", db_digest1);
-         $display("");
-         db_error = 1;
-       end
-      
-     if (db_digest1 == expected1)
-       begin
-         $display("*** TC %0d second block successful", tc_number);
-         $display("");
-       end 
-     else
-       begin
-         $display("*** ERROR: TC %0d second block NOT successful", tc_number);
-         $display("Expected: 0x%064x", expected2);
-         $display("Got:      0x%064x", tb_digest);
-         $display("");
-         db_error = 1;
-       end
-
-     if (db_error)
-       begin
-         error_ctr = error_ctr + 1;
-       end
-   end
-  endtask // single_block_test
+//  task double_block_test(input [7 : 0]    tc_number,
+//                         input [1 : 0]    mode,
+//                         input [1023 : 0] block1,
+//                         input [511 : 0]  expected1,
+//                         input [1023 : 0] block2,
+//                         input [511 : 0]  expected2);
+//
+//     reg [255 : 0] db_digest1;
+//     reg           db_error;
+//   begin
+//     $display("*** TC %0d double block test case started.", tc_number);
+//     db_error = 0;
+//     tc_ctr = tc_ctr + 1;
+//
+//     $display("*** TC %0d first block started.", tc_number);
+//     tb_block = block1;
+//     tb_init = 1;
+//     #(2 * CLK_HALF_PERIOD);
+//     tb_init = 0;
+//     wait_ready();
+//     db_digest1 = tb_digest;
+//     $display("*** TC %0d first block done.", tc_number);
+//     
+//     $display("*** TC %0d second block started.", tc_number);
+//     tb_block = block2;
+//     tb_next = 1;
+//     #(2 * CLK_HALF_PERIOD);
+//     tb_next = 0;
+//     wait_ready();
+//     $display("*** TC %0d second block done.", tc_number);
+//      
+//     if (db_digest1 == expected1)
+//       begin
+//         $display("*** TC %0d first block successful", tc_number);
+//         $display("");
+//       end 
+//     else
+//       begin
+//         $display("*** ERROR: TC %0d first block NOT successful", tc_number);
+//         $display("Expected: 0x%064x", expected1);
+//         $display("Got:      0x%064x", db_digest1);
+//         $display("");
+//         db_error = 1;
+//       end
+//      
+//     if (db_digest1 == expected1)
+//       begin
+//         $display("*** TC %0d second block successful", tc_number);
+//         $display("");
+//       end 
+//     else
+//       begin
+//         $display("*** ERROR: TC %0d second block NOT successful", tc_number);
+//         $display("Expected: 0x%064x", expected2);
+//         $display("Got:      0x%064x", tb_digest);
+//         $display("");
+//         db_error = 1;
+//       end
+//
+//     if (db_error)
+//       begin
+//         error_ctr = error_ctr + 1;
+//       end
+//   end
+//  endtask // double_block_test
                          
     
   //----------------------------------------------------------------
@@ -374,8 +379,7 @@ module tb_sha512_core();
   initial
     begin : sha512_core_test
       reg [1024 : 0] single_block;
-      reg [511 : 0] tc1_expected;
-      
+      reg [511 : 0]  tc1_expected;
       
       $display("   -- Testbench for sha512 core started --");
 
@@ -386,6 +390,8 @@ module tb_sha512_core();
 
       // Single block tests are using the same test block
       single_block = 1024'h6162638000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000018;
+      tc1_expected = 512'hDDAF35A193617ABACC417349AE20413112E6FA4E89A97EA20A9EEEE64B55D39A2192992A274FC1A836BA3C23A3FEEBBD454D4423643CE80E2A9AC94FA54CA49F;
+      single_block_test, MODE_SHA_512, single_block, expected);
       
       // TC1: 512/224
       // tc1_expected = 512'h
