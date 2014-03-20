@@ -50,15 +50,15 @@ module tb_sha512_core();
   //----------------------------------------------------------------
   // Internal constant and parameter definitions.
   //----------------------------------------------------------------
-  parameter DEBUG = 0;
+  parameter DEBUG = 1;
 
-  parameter CLK_HALF_PERIOD = 2;
+  parameter CLK_PERIOD      = 2;
+  parameter CLK_HALF_PERIOD = CLK_PERIOD / 2;
 
   parameter MODE_SHA_512_224 = 0;
   parameter MODE_SHA_512_256 = 1;
   parameter MODE_SHA_384     = 2;
   parameter MODE_SHA_512     = 3;
-  
   
   
   //----------------------------------------------------------------
@@ -120,7 +120,7 @@ module tb_sha512_core();
   always
     begin : sys_monitor
       cycle_ctr = cycle_ctr + 1;
-      #(2 * CLK_HALF_PERIOD);
+      #(CLK_PERIOD);
       if (DEBUG)
         begin
           dump_dut_state();
@@ -192,7 +192,7 @@ module tb_sha512_core();
     begin
       $display("*** Toggle reset.");
       tb_reset_n = 0;
-      #(4 * CLK_HALF_PERIOD);
+      #(2 * CLK_PERIOD);
       tb_reset_n = 1;
     end
   endtask // reset_dut
@@ -216,6 +216,7 @@ module tb_sha512_core();
       tb_init = 0;
       tb_next = 0;
       tb_next = 2'b00;
+      tb_mode = 2'b00;
       tb_block = {32{32'h00000000}};
     end
   endtask // init_dut
@@ -253,7 +254,7 @@ module tb_sha512_core();
     begin
       while (!tb_ready)
         begin
-          #(2 * CLK_HALF_PERIOD);
+          #(2 * CLK_PERIOD);
         end
     end
   endtask // wait_ready
@@ -264,18 +265,21 @@ module tb_sha512_core();
   //
   // Run a test case spanning a single data block.
   //----------------------------------------------------------------
-  task single_block_test(input [1 : 0]    mode,
+  task single_block_test(input [7 : 0]    tc_number,
+                         input [1 : 0]    mode,
                          input [1023 : 0] block,
                          input [511 : 0]  expected);
    begin
-     $display("*** TC %0d single block test case started.", tc_number);
+     $display("*** TC %0d single block test case started.");
      tc_ctr = tc_ctr + 1;
 
      tb_block = block;
      tb_init = 1;
-     #(2 * CLK_HALF_PERIOD);
+     #(CLK_PERIOD);
      tb_init = 0;
-     wait_ready();
+
+     #(100 * CLK_PERIOD);
+     // wait_ready();
 
       
      if (tb_digest == expected)
@@ -391,7 +395,7 @@ module tb_sha512_core();
       // Single block tests are using the same test block
       single_block = 1024'h6162638000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000018;
       tc1_expected = 512'hDDAF35A193617ABACC417349AE20413112E6FA4E89A97EA20A9EEEE64B55D39A2192992A274FC1A836BA3C23A3FEEBBD454D4423643CE80E2A9AC94FA54CA49F;
-      single_block_test, MODE_SHA_512, single_block, expected);
+      single_block_test(8'h01, MODE_SHA_512, single_block, tc1_expected);
       
       // TC1: 512/224
       // tc1_expected = 512'h
