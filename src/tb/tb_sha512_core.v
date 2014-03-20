@@ -401,6 +401,8 @@ module tb_sha512_core();
       single_block_test(8'h01, MODE_SHA_512, single_block, tc1_expected);
 
       tc2_expected = {{8{32'h00000000}}, 224h'4634270F707B6A54DAAE7530460842E20E37ED265CEEE9A43E8924AA};
+
+      tc3_expected = {{8{32'h00000000}}, 256h'53048E2681941EF99B2E29B76B4C7DABE4C2D0C634FC6D46E0E2F13107E7AF23};
       
       
       // TC1: 512/224
