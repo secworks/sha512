@@ -270,7 +270,7 @@ module tb_sha512_core();
                          input [1023 : 0] block,
                          input [511 : 0]  expected);
    begin
-     $display("*** TC %0d single block test case started.");
+     $display("*** TC %0d single block test case started.", tc_number);
      tc_ctr = tc_ctr + 1;
 
      tb_block = block;
@@ -279,7 +279,7 @@ module tb_sha512_core();
      #(CLK_PERIOD);
      tb_init = 0;
 
-     #(100 * CLK_PERIOD);
+     #(200 * CLK_PERIOD);
      // wait_ready();
 
       
