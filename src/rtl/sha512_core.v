@@ -102,8 +102,8 @@ module sha512_core(
   reg [63 : 0] H7_new;
   reg          H_we;
   
-  reg [5 : 0] t_ctr_reg;
-  reg [5 : 0] t_ctr_new;
+  reg [6 : 0] t_ctr_reg;
+  reg [6 : 0] t_ctr_new;
   reg         t_ctr_we;
   reg         t_ctr_inc;
   reg         t_ctr_rst;
@@ -222,7 +222,7 @@ module sha512_core(
           H6_reg           <= 64'h00000000;
           H7_reg           <= 64'h00000000;
           digest_valid_reg <= 0;
-          t_ctr_reg        <= 6'b000000;
+          t_ctr_reg        <= 7'h00;
           sha512_ctrl_reg  <= CTRL_IDLE;
         end
       else
@@ -427,12 +427,12 @@ module sha512_core(
   //----------------------------------------------------------------
   always @*
     begin : t_ctr
-      t_ctr_new = 0;
+      t_ctr_new = 7'h00;
       t_ctr_we  = 0;
       
       if (t_ctr_rst)
         begin
-          t_ctr_new = 0;
+          t_ctr_new = 7'h00;
           t_ctr_we  = 1;
         end
 
