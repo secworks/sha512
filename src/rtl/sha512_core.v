@@ -325,13 +325,13 @@ module sha512_core(
       reg [63 : 0] sum1;
       reg [63 : 0] ch;
 
-      sum1 = {e_reg[5  : 0], e_reg[31 :  6]} ^ 
-             {e_reg[10 : 0], e_reg[31 : 11]} ^ 
-             {e_reg[24 : 0], e_reg[31 : 25]};
+      sum1 = {e_reg[13 : 0], e_reg[63 : 14]} ^ 
+             {e_reg[17 : 0], e_reg[63 : 18]} ^ 
+             {e_reg[40 : 0], e_reg[63 : 41]};
 
       ch = (e_reg & f_reg) ^ ((~e_reg) & g_reg);
       
-      t1 = h_reg + sum1 + ch + w_data + k_data;
+      t1 = h_reg + sum1 + ch + k_data + w_data;
     end // t1_logic
 
 
@@ -345,9 +345,9 @@ module sha512_core(
       reg [63 : 0] sum0;
       reg [63 : 0] maj;
 
-      sum0 = {a_reg[1  : 0], a_reg[31 :  2]} ^
-             {a_reg[12 : 0], a_reg[31 : 13]} ^
-             {a_reg[21 : 0], a_reg[31 : 22]};
+      sum0 = {a_reg[27 : 0], a_reg[63 : 28]} ^
+             {a_reg[33 : 0], a_reg[63 : 34]} ^
+             {a_reg[38 : 0], a_reg[63 : 39]};
 
       maj = (a_reg & b_reg) ^ (a_reg & c_reg) ^ (b_reg & c_reg);
       
