@@ -278,10 +278,8 @@ module tb_sha512_core();
      tb_init = 1;
      #(2 * CLK_PERIOD);
      tb_init = 0;
-
-     #(200 * CLK_PERIOD);
-     // wait_ready();
-
+     
+     wait_ready();
       
      if (tb_digest == expected)
        begin
