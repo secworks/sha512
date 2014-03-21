@@ -131,7 +131,7 @@ module tb_sha512_core();
   //----------------------------------------------------------------
   // dump_dut_state()
   //
-  // Dump the state of the dump when needed.
+  // Dump the state of the dut.
   //----------------------------------------------------------------
   task dump_dut_state();
     begin
@@ -181,7 +181,29 @@ module tb_sha512_core();
       $display("");
     end
   endtask // dump_dut_state
+
   
+  //----------------------------------------------------------------
+  // dump_dut_wmem()
+  //
+  // Dump the state of the dut wmem.
+  //----------------------------------------------------------------
+  task dump_dut_wmem();
+    begin
+      $display("State of DUT WMEM");
+      $display("-----------------");
+      $display("W[00] = 0x%016x, W[01] = 0x%016x, W[02] = 0x%016x, W[03] = 0x%016x", 
+               dut.w_mem.w_mem[00], dut.w_mem.w_mem[01], dut.w_mem.w_mem[02], dut.w_mem.w_mem[03]);
+      $display("W[04] = 0x%016x, W[05] = 0x%016x, W[06] = 0x%016x, W[07] = 0x%016x", 
+               dut.w_mem.w_mem[04], dut.w_mem.w_mem[05], dut.w_mem.w_mem[06], dut.w_mem.w_mem[07]);
+      $display("W[08] = 0x%016x, W[09] = 0x%016x, W[10] = 0x%016x, W[11] = 0x%016x", 
+               dut.w_mem.w_mem[08], dut.w_mem.w_mem[09], dut.w_mem.w_mem[10], dut.w_mem.w_mem[11]);
+      $display("W[12] = 0x%016x, W[13] = 0x%016x, W[14] = 0x%016x, W[15] = 0x%016x", 
+               dut.w_mem.w_mem[12], dut.w_mem.w_mem[13], dut.w_mem.w_mem[14], dut.w_mem.w_mem[15]);
+      $display("");
+    end
+  endtask // dump_dut_wmem
+
   
   //----------------------------------------------------------------
   // reset_dut()
@@ -399,7 +421,9 @@ module tb_sha512_core();
 
       tc1_expected = 512'hDDAF35A193617ABACC417349AE20413112E6FA4E89A97EA20A9EEEE64B55D39A2192992A274FC1A836BA3C23A3FEEBBD454D4423643CE80E2A9AC94FA54CA49F;
       single_block_test(8'h01, MODE_SHA_512, single_block, tc1_expected);
+      dump_dut_wmem();
 
+      
       tc2_expected = {288'h000000000000000000000000000000000000000000000000000000000000000000000000, 
                       224'h4634270F707B6A54DAAE7530460842E20E37ED265CEEE9A43E8924AA};
       single_block_test(8'h02, MODE_SHA_512_224, single_block, tc2_expected);
