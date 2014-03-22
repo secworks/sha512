@@ -237,19 +237,19 @@ class SHA512():
         return (x & y) ^ (x & z) ^ (y & z)
 
     def _sigma0(self, x):
-        return (self._rotr64(x, 2) ^ self._rotr64(x, 13) ^ self._rotr64(x, 22))
+        return (self._rotr64(x, 28) ^ self._rotr64(x, 34) ^ self._rotr64(x, 39))
 
 
     def _sigma1(self, x):
-        return (self._rotr64(x, 6) ^ self._rotr64(x, 11) ^ self._rotr64(x, 25))
+        return (self._rotr64(x, 14) ^ self._rotr64(x, 18) ^ self._rotr64(x, 41))
 
 
     def _delta0(self, x):
-        return (self._rotr64(x, 7) ^ self._rotr64(x, 18) ^ self._shr64(x, 3))
+        return (self._rotr64(x, 1) ^ self._rotr64(x, 8) ^ self._shr64(x, 7))
 
 
     def _delta1(self, x):
-        return (self._rotr64(x, 17) ^ self._rotr64(x, 19) ^ self._shr64(x, 10))
+        return (self._rotr64(x, 19) ^ self._rotr64(x, 61) ^ self._shr64(x, 6))
     
 
     def _T1(self, e, f, g, h, k, w):
