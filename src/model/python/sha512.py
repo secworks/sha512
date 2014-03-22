@@ -289,21 +289,45 @@ def main():
     print("---------------------------------")
     print
 
-    my_sha512 = SHA512(mode = 'MODE_SHA_512', verbose=1);
-
-    # TC1: NIST testcase with message "abc"
+    # Single block message.
     TC1_block = [0x6162638000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
                  0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
                  0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
                  0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000018]
+
     
+    my_sha512 = SHA512(mode = 'MODE_SHA_512', verbose=1);
     TC1_expected = [0xDDAF35A193617ABA, 0xCC417349AE204131, 0x12E6FA4E89A97EA2, 0x0A9EEEE64B55D39A,
                     0x2192992A274FC1A8, 0x36BA3C23A3FEEBBD, 0x454D4423643CE80E, 0x2A9AC94FA54CA49F]
-    
     my_sha512.init()
     my_sha512.next(TC1_block)
     my_digest = my_sha512.get_digest()
     compare_digests(my_digest, TC1_expected)
+
+
+    my_sha512 = SHA512(mode = 'MODE_SHA_512_224', verbose=1);
+    TC2_expected = [0x4634270F707B6A54, 0xDAAE7530460842E2, 0x0E37ED265CEEE9A4, 0x3E8924AA00000000]
+    my_sha512.init()
+    my_sha512.next(TC1_block)
+    my_digest = my_sha512.get_digest()
+    compare_digests(my_digest, TC2_expected)
+
+
+    my_sha512 = SHA512(mode = 'MODE_SHA_512_256', verbose=1);
+    TC3_expected = [0x53048E2681941EF9, 0x9B2E29B76B4C7DAB, 0xE4C2D0C634FC6D46, 0xE0E2F13107E7AF23]
+    my_sha512.init()
+    my_sha512.next(TC1_block)
+    my_digest = my_sha512.get_digest()
+    compare_digests(my_digest, TC3_expected)
+
+
+    my_sha512 = SHA512(mode = 'MODE_SHA_384', verbose=1);
+    TC4_expected = [0xCB00753F45A35E8B, 0xB5A03D699AC65007, 0x272C32AB0EDED163, 0x1A8B605A43FF5BED,
+                    0x8086072BA1E7CC23, 0x58BAECA134C825A7]
+    my_sha512.init()
+    my_sha512.next(TC1_block)
+    my_digest = my_sha512.get_digest()
+    compare_digests(my_digest, TC4_expected)
 
     
 
