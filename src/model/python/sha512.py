@@ -49,6 +49,7 @@ import sys
 #-------------------------------------------------------------------
 # Constants.
 #-------------------------------------------------------------------
+MAX_64BIT = 0xffffffffffffffff
 
 
 #-------------------------------------------------------------------
@@ -61,6 +62,7 @@ class SHA512():
         self.mode = mode
         self.verbose = verbose
         self.mode 
+        self.NUM_ROUNDS = 80
         self.H = [0] * 8
         self.t1 = 0
         self.t2 = 0
@@ -137,7 +139,7 @@ class SHA512():
             print("State after init:")
             self._print_state(0)
 
-        for i in range(64):
+        for i in range(self.NUM_ROUNDS):
             self._sha512_round(i)
             if self.verbose:
                 self._print_state(i)
@@ -146,7 +148,17 @@ class SHA512():
 
 
     def get_digest(self):
-        return self.H
+        if self.mode == 'MODE_SHA_512_224':
+            return self.H[0:3] # FIX THIS!
+
+        elif self.mode == 'MODE_SHA_512_256':
+            return self.H[0:4]
+
+        elif self.mode == 'MODE_SHA_384':
+            return self.H[0:6]
+
+        elif self.mode == 'MODE_SHA_512':
+            return self.H
 
 
     def _copy_digest(self):
@@ -161,24 +173,24 @@ class SHA512():
     
     
     def _update_digest(self):
-        self.H[0] = (self.H[0] + self.a) & 0xffffffff 
-        self.H[1] = (self.H[1] + self.b) & 0xffffffff 
-        self.H[2] = (self.H[2] + self.c) & 0xffffffff 
-        self.H[3] = (self.H[3] + self.d) & 0xffffffff 
-        self.H[4] = (self.H[4] + self.e) & 0xffffffff 
-        self.H[5] = (self.H[5] + self.f) & 0xffffffff 
-        self.H[6] = (self.H[6] + self.g) & 0xffffffff 
-        self.H[7] = (self.H[7] + self.h) & 0xffffffff 
+        self.H[0] = (self.H[0] + self.a) & MAX_64BIT
+        self.H[1] = (self.H[1] + self.b) & MAX_64BIT
+        self.H[2] = (self.H[2] + self.c) & MAX_64BIT
+        self.H[3] = (self.H[3] + self.d) & MAX_64BIT
+        self.H[4] = (self.H[4] + self.e) & MAX_64BIT
+        self.H[5] = (self.H[5] + self.f) & MAX_64BIT
+        self.H[6] = (self.H[6] + self.g) & MAX_64BIT
+        self.H[7] = (self.H[7] + self.h) & MAX_64BIT
 
 
     def _print_state(self, round):
         print("State at round 0x%02x:" % round)
-        print("t1 = 0x%08x, t2 = 0x%08x" % (self.t1, self.t2))
-        print("k  = 0x%08x, w  = 0x%08x" % (self.k, self.w))
-        print("a  = 0x%08x, b  = 0x%08x" % (self.a, self.b))
-        print("c  = 0x%08x, d  = 0x%08x" % (self.c, self.d))
-        print("e  = 0x%08x, f  = 0x%08x" % (self.e, self.f))
-        print("g  = 0x%08x, h  = 0x%08x" % (self.g, self.h))
+        print("t1 = 0x%016x, t2 = 0x%016x" % (self.t1, self.t2))
+        print("k  = 0x%016x, w  = 0x%016x" % (self.k,  self.w))
+        print("a  = 0x%016x, b  = 0x%016x" % (self.a,  self.b))
+        print("c  = 0x%016x, d  = 0x%016x" % (self.c,  self.d))
+        print("e  = 0x%016x, f  = 0x%016x" % (self.e,  self.f))
+        print("g  = 0x%016x, h  = 0x%016x" % (self.g,  self.h))
         print("")
 
 
@@ -190,11 +202,11 @@ class SHA512():
         self.h = self.g
         self.g = self.f
         self.f = self.e
-        self.e = (self.d + self.t1) & 0xffffffff
+        self.e = (self.d + self.t1) & MAX_64BIT
         self.d = self.c
         self.c = self.b
         self.b = self.a
-        self.a = (self.t1 + self.t2) & 0xffffffff
+        self.a = (self.t1 + self.t2) & MAX_64BIT
 
 
     def _next_w(self, round):
@@ -205,7 +217,7 @@ class SHA512():
             tmp_w = (self._delta1(self.W[14]) +
                      self.W[9] + 
                      self._delta0(self.W[1]) +
-                     self.W[0]) & 0xffffffff
+                     self.W[0]) & MAX_64BIT
             for i in range(15):
                 self.W[i] = self.W[(i+1)]
             self.W[15] = tmp_w
@@ -225,34 +237,34 @@ class SHA512():
         return (x & y) ^ (x & z) ^ (y & z)
 
     def _sigma0(self, x):
-        return (self._rotr32(x, 2) ^ self._rotr32(x, 13) ^ self._rotr32(x, 22))
+        return (self._rotr64(x, 2) ^ self._rotr64(x, 13) ^ self._rotr64(x, 22))
 
 
     def _sigma1(self, x):
-        return (self._rotr32(x, 6) ^ self._rotr32(x, 11) ^ self._rotr32(x, 25))
+        return (self._rotr64(x, 6) ^ self._rotr64(x, 11) ^ self._rotr64(x, 25))
 
 
     def _delta0(self, x):
-        return (self._rotr32(x, 7) ^ self._rotr32(x, 18) ^ self._shr32(x, 3))
+        return (self._rotr64(x, 7) ^ self._rotr64(x, 18) ^ self._shr64(x, 3))
 
 
     def _delta1(self, x):
-        return (self._rotr32(x, 17) ^ self._rotr32(x, 19) ^ self._shr32(x, 10))
+        return (self._rotr64(x, 17) ^ self._rotr64(x, 19) ^ self._shr64(x, 10))
     
 
     def _T1(self, e, f, g, h, k, w):
-        return (h + self._sigma1(e) + self._Ch(e, f, g) + k + w) & 0xffffffff
+        return (h + self._sigma1(e) + self._Ch(e, f, g) + k + w) & MAX_64BIT
 
 
     def _T2(self, a, b, c):
-        return (self._sigma0(a) + self._Maj(a, b, c)) & 0xffffffff
+        return (self._sigma0(a) + self._Maj(a, b, c)) & MAX_64BIT
 
 
-    def _rotr32(self, n, r):
-        return ((n >> r) | (n << (32 - r))) & 0xffffffff
+    def _rotr64(self, n, r):
+        return ((n >> r) | (n << (64 - r))) & MAX_64BIT
 
     
-    def _shr32(self, n, r):
+    def _shr64(self, n, r):
         return (n >> r)
 
 
@@ -277,16 +289,16 @@ def main():
     print("---------------------------------")
     print
 
-    my_sha512 = SHA512(verbose=1);
+    my_sha512 = SHA512(mode = 'MODE_SHA_512', verbose=1);
 
     # TC1: NIST testcase with message "abc"
-    TC1_block = [0x61626380, 0x00000000, 0x00000000, 0x00000000, 
-                 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-                 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-                 0x00000000, 0x00000000, 0x00000000, 0x00000018]
+    TC1_block = [0x6162638000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
+                 0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
+                 0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000,
+                 0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000018]
     
-    TC1_expected = [0xBA7816BF, 0x8F01CFEA, 0x414140DE, 0x5DAE2223,
-                    0xB00361A3, 0x96177A9C, 0xB410FF61, 0xF20015AD]
+    TC1_expected = [0xDDAF35A193617ABA, 0xCC417349AE204131, 0x12E6FA4E89A97EA2, 0x0A9EEEE64B55D39A,
+                    0x2192992A274FC1A8, 0x36BA3C23A3FEEBBD, 0x454D4423643CE80E, 0x2A9AC94FA54CA49F]
     
     my_sha512.init()
     my_sha512.next(TC1_block)
