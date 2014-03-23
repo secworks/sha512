@@ -193,10 +193,10 @@ module sha512_w_mem(
   //----------------------------------------------------------------
   always @*
     begin : w_mem_update_logic
+      reg [63 : 0] w_0;
       reg [63 : 0] w_1;
       reg [63 : 0] w_9;
       reg [63 : 0] w_14;
-      reg [63 : 0] w_15;
       reg [63 : 0] d0;
       reg [63 : 0] d1;
 
@@ -218,10 +218,10 @@ module sha512_w_mem(
       w_mem15_new = 64'h0000000000000000;
       w_mem_we    = 0;
       
+      w_0  = w_mem[0];
       w_1  = w_mem[1];
       w_9  = w_mem[9];
       w_14 = w_mem[14];
-      w_15 = w_mem[15];
 
       d0 = {w_1[0],     w_1[63 : 1]} ^ // ROTR1
            {w_1[7 : 0], w_1[63 : 8]} ^ // ROTR8
@@ -231,7 +231,7 @@ module sha512_w_mem(
            {w_14[60 : 0], w_14[63 : 61]} ^ // ROTR61
            {6'b000000,    w_14[63 : 6]};   // SHR6
       
-      w_new = d1 + w_9 + d0 + w_15;
+      w_new = w_0 + d0 + w_9 + d1;
       
       if (init)
         begin
