@@ -78,8 +78,8 @@ module sha512_w_mem(
   reg [63 : 0] w_mem15_new;
   reg          w_mem_we;
   
-  reg [5 : 0] w_ctr_reg;
-  reg [5 : 0] w_ctr_new;
+  reg [6 : 0] w_ctr_reg;
+  reg [6 : 0] w_ctr_new;
   reg         w_ctr_we;
   reg         w_ctr_inc;
   reg         w_ctr_rst;
@@ -128,7 +128,7 @@ module sha512_w_mem(
           w_mem[13]             <= 64'h0000000000000000;
           w_mem[14]             <= 64'h0000000000000000;
           w_mem[15]             <= 64'h0000000000000000;
-          w_ctr_reg             <= 6'h00;
+          w_ctr_reg             <= 7'h00;
           sha512_w_mem_ctrl_reg <= CTRL_IDLE;
         end
       else
@@ -288,13 +288,13 @@ module sha512_w_mem(
       
       if (w_ctr_rst)
         begin
-          w_ctr_new = 6'h00;
+          w_ctr_new = 7'h00;
           w_ctr_we  = 1;
         end
 
       if (w_ctr_inc)
         begin
-          w_ctr_new = w_ctr_reg + 6'h01;
+          w_ctr_new = w_ctr_reg + 7'h01;
           w_ctr_we  = 1;
         end
     end // w_ctr
