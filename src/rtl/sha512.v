@@ -111,23 +111,23 @@ module sha512(
   parameter ADDR_DIGEST5       = 8'h45;
   parameter ADDR_DIGEST6       = 8'h46;
   parameter ADDR_DIGEST7       = 8'h47;
-  parameter ADDR_DIGEST8       = 8'h40;
-  parameter ADDR_DIGEST9       = 8'h41;
-  parameter ADDR_DIGEST10      = 8'h42;
-  parameter ADDR_DIGEST11      = 8'h43;
-  parameter ADDR_DIGEST12      = 8'h44;
-  parameter ADDR_DIGEST13      = 8'h45;
-  parameter ADDR_DIGEST14      = 8'h46;
-  parameter ADDR_DIGEST15      = 8'h47;
+  parameter ADDR_DIGEST8       = 8'h48;
+  parameter ADDR_DIGEST9       = 8'h49;
+  parameter ADDR_DIGEST10      = 8'h4a;
+  parameter ADDR_DIGEST11      = 8'h4b;
+  parameter ADDR_DIGEST12      = 8'h4c;
+  parameter ADDR_DIGEST13      = 8'h4d;
+  parameter ADDR_DIGEST14      = 8'h4e;
+  parameter ADDR_DIGEST15      = 8'h4f;
   
   parameter CORE_NAME0         = 32'h73686132; // "sha2"
   parameter CORE_NAME1         = 32'h2d323536; // "-512"
   parameter CORE_VERSION       = 32'h302e3830; // "0.80"
 
-  parameter MODE_SHA_512_224   = 0;
-  parameter MODE_SHA_512_256   = 1;
-  parameter MODE_SHA_384       = 2;
-  parameter MODE_SHA_512       = 3;
+  parameter MODE_SHA_512_224   = 2'h0;
+  parameter MODE_SHA_512_256   = 2'h1;
+  parameter MODE_SHA_384       = 2'h2;
+  parameter MODE_SHA_512       = 2'h3;
 
   
   //----------------------------------------------------------------
@@ -263,6 +263,7 @@ module sha512(
                    
                    .init(core_init),
                    .next(core_next),
+                   .mode(core_mode),
                   
                    .block(core_block),
                    
