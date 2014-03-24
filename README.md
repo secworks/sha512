@@ -13,7 +13,7 @@ set for every block to be processed.
 
 
 ## Status ##
-***(2014-03-24)**
+***(2014-03-24)***
 
 Core works for the SHA-512 mode case. Added top level wrapper and built
 the design for Altera Cyclone V GX:
