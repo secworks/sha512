@@ -50,7 +50,7 @@ module tb_sha512_core();
   //----------------------------------------------------------------
   // Internal constant and parameter definitions.
   //----------------------------------------------------------------
-  parameter DEBUG = 1;
+  parameter DEBUG = 0;
 
   parameter CLK_PERIOD      = 2;
   parameter CLK_HALF_PERIOD = CLK_PERIOD / 2;
@@ -291,10 +291,12 @@ module tb_sha512_core();
                          input [1 : 0]    mode,
                          input [1023 : 0] block,
                          input [511 : 0]  expected);
+    reg [511 : 0] mask;
+
    begin
      $display("*** TC %0d single block test case started.", tc_number);
      tc_ctr = tc_ctr + 1;
-
+     
      tb_block = block;
      tb_mode  = mode;
      tb_init = 1;
@@ -302,8 +304,30 @@ module tb_sha512_core();
      tb_init = 0;
      
      wait_ready();
+
+     case (mode)
+       MODE_SHA_512_224:
+         begin
+           mask = {{9{32'h00000000}}, {7{32'hffffffff}}};
+         end
+       
+       MODE_SHA_512_256:
+         begin
+           mask = {{8{32'h00000000}}, {8{32'hffffffff}}};
+         end
+       
+       MODE_SHA_384:
+         begin
+           mask = {{4{32'h00000000}}, {12{32'hffffffff}}};
+         end
+       
+       MODE_SHA_512:
+         begin
+           mask = {16{32'hffffffff}};
+         end
+     endcase // case (mode)
       
-     if (tb_digest == expected)
+     if ((tb_digest & mask) == (expected & mask))
        begin
          $display("*** TC %0d successful.", tc_number);
          $display("");
@@ -421,8 +445,6 @@ module tb_sha512_core();
 
       tc1_expected = 512'hDDAF35A193617ABACC417349AE20413112E6FA4E89A97EA20A9EEEE64B55D39A2192992A274FC1A836BA3C23A3FEEBBD454D4423643CE80E2A9AC94FA54CA49F;
       single_block_test(8'h01, MODE_SHA_512, single_block, tc1_expected);
-      dump_dut_wmem();
-
       
       tc2_expected = {288'h000000000000000000000000000000000000000000000000000000000000000000000000, 
                       224'h4634270F707B6A54DAAE7530460842E20E37ED265CEEE9A43E8924AA};
@@ -435,10 +457,6 @@ module tb_sha512_core();
       tc4_expected = {128'h00000000000000000000000000000000, 
                       384'hCB00753F45A35E8BB5A03D699AC65007272C32AB0EDED1631A8B605A43FF5BED8086072BA1E7CC2358BAECA134C825A7};
       single_block_test(8'h04, MODE_SHA_384, single_block, tc4_expected);
-      
-      // TC1: 512/224
-      // tc1_expected = 512'h
-      // 4634270F 707B6A54 DAAE7530 460842E2 0E37ED26 5CEEE9A4 3E8924AA
                      
       display_test_result();
       $display("*** Simulation done.");
