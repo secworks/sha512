@@ -439,6 +439,8 @@ module tb_sha512_core();
       reg [511 : 0]  tc6_expected;
       reg [511 : 0]  tc7_expected;
       reg [511 : 0]  tc8_expected;
+      reg [511 : 0]  tc9_expected;
+      reg [511 : 0]  tc10_expected;
       
       $display("   -- Testbench for sha512 core started --");
 
@@ -473,6 +475,10 @@ module tb_sha512_core();
       // SHA-512_224 two block digests.
       tc7_expected = 512'h9606CB2DB7823CE75FE35E2674A8F9EF1417ED9E89C412BB54EA29664586108625852563EED495096DEBAAE2F4737FD75319224B135486F8E6C0F55E700C35B3;
       tc8_expected = {224'h23FEC5BB94D60B23308192640B0C453335D664734FE40E7268674AF9, {9{32'h00000000}}};
+
+      // SHA-512_256 two block digests.
+      tc9_expected = 512'h8DD99EB081311F8BCBBBC42CC7AFB288E8E9408730419D1E953FF7A2B194048DAE24175483C44C7C809B348E8E88E3ECBF2EA614CEED9C5B51807937F11867E1;
+      tc10_expected = {256'h3928E184FB8690F840DA3988121D31BE65CB9D3EF83EE6146FEAC861E19B563A, {8{32'h00000000}}};
 
                      
       display_test_result();
