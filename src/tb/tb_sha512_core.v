@@ -351,20 +351,20 @@ module tb_sha512_core();
   // Run a test case spanning two data blocks. We check both
   // intermediate and final digest.
   //----------------------------------------------------------------
-//  task double_block_test(input [7 : 0]    tc_number,
-//                         input [1 : 0]    mode,
-//                         input [1023 : 0] block1,
-//                         input [511 : 0]  expected1,
-//                         input [1023 : 0] block2,
-//                         input [511 : 0]  expected2);
-//
-//     reg [255 : 0] db_digest1;
-//     reg           db_error;
-//   begin
-//     $display("*** TC %0d double block test case started.", tc_number);
-//     db_error = 0;
-//     tc_ctr = tc_ctr + 1;
-//
+  task double_block_test(input [7 : 0]    tc_number,
+                         input [1 : 0]    mode,
+                         input [1023 : 0] block1,
+                         input [1023 : 0] block2,
+                         input [511 : 0]  expected1,
+                         input [511 : 0]  expected2);
+
+     reg [255 : 0] db_digest1;
+     reg           db_error;
+   begin
+     $display("*** TC %0d double block test case started.", tc_number);
+     db_error = 0;
+     tc_ctr = tc_ctr + 1;
+
 //     $display("*** TC %0d first block started.", tc_number);
 //     tb_block = block1;
 //     tb_init = 1;
@@ -414,8 +414,8 @@ module tb_sha512_core();
 //       begin
 //         error_ctr = error_ctr + 1;
 //       end
-//   end
-//  endtask // double_block_test
+   end
+  endtask // double_block_test
                          
     
   //----------------------------------------------------------------
@@ -451,40 +451,50 @@ module tb_sha512_core();
       reset_dut();
       dump_dut_state();
 
-      // Single block tests are using the same test block
+      // Single block test mesage.
       single_block = 1024'h6162638000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000018;
 
+      // SHA-512 single block digest and test.
       tc1_expected = 512'hDDAF35A193617ABACC417349AE20413112E6FA4E89A97EA20A9EEEE64B55D39A2192992A274FC1A836BA3C23A3FEEBBD454D4423643CE80E2A9AC94FA54CA49F;
       single_block_test(8'h01, MODE_SHA_512, single_block, tc1_expected);
       
+      // SHA-512_224 single block digest and test.
       tc2_expected = {224'h4634270F707B6A54DAAE7530460842E20E37ED265CEEE9A43E8924AA, {9{32'h00000000}}};
       single_block_test(8'h02, MODE_SHA_512_224, single_block, tc2_expected);
 
+      // SHA-512_256 single block digest and test.
       tc3_expected = {256'h53048E2681941EF99B2E29B76B4C7DABE4C2D0C634FC6D46E0E2F13107E7AF23, {8{32'h00000000}}};
       single_block_test(8'h03, MODE_SHA_512_256, single_block, tc3_expected);
 
+      // SHA-384 single block digest and test.
       tc4_expected = {384'hCB00753F45A35E8BB5A03D699AC65007272C32AB0EDED1631A8B605A43FF5BED8086072BA1E7CC2358BAECA134C825A7, {4{32'h00000000}}};
       single_block_test(8'h04, MODE_SHA_384, single_block, tc4_expected);
 
 
+      // Two block test message.
       double_block_one = 1024'h61626364656667686263646566676869636465666768696A6465666768696A6B65666768696A6B6C666768696A6B6C6D6768696A6B6C6D6E68696A6B6C6D6E6F696A6B6C6D6E6F706A6B6C6D6E6F70716B6C6D6E6F7071726C6D6E6F707172736D6E6F70717273746E6F70717273747580000000000000000000000000000000;
       double_block_two = 1024'h0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000380;
 
-      // SHA-512 two block digests.
+      // SHA-512 two block digests and test.
       tc5_expected = 512'h4319017A2B706E69CD4B05938BAE5E890186BF199F30AA956EF8B71D2F810585D787D6764B20BDA2A26014470973692000EC057F37D14B8E06ADD5B50E671C72;
       tc6_expected = 512'h8E959B75DAE313DA8CF4F72814FC143F8F7779C6EB9F7FA17299AEADB6889018501D289E4900F7E4331B99DEC4B5433AC7D329EEB6DD26545E96E55B874BE909;
+      double_block_test(8'h05, MODE_SHA_512, double_block_one, double_block_two, tc5_expected, tc6_expected);
 
-      // SHA-512_224 two block digests.
+      // SHA-512_224 two block digests and test.
       tc7_expected = 512'h9606CB2DB7823CE75FE35E2674A8F9EF1417ED9E89C412BB54EA29664586108625852563EED495096DEBAAE2F4737FD75319224B135486F8E6C0F55E700C35B3;
       tc8_expected = {224'h23FEC5BB94D60B23308192640B0C453335D664734FE40E7268674AF9, {9{32'h00000000}}};
+      double_block_test(8'h06, MODE_SHA_512_224, double_block_one, double_block_two, tc7_expected, tc8_expected);
 
-      // SHA-512_256 two block digests.
+      // SHA-512_256 two block digests and test.
       tc9_expected = 512'h8DD99EB081311F8BCBBBC42CC7AFB288E8E9408730419D1E953FF7A2B194048DAE24175483C44C7C809B348E8E88E3ECBF2EA614CEED9C5B51807937F11867E1;
       tc10_expected = {256'h3928E184FB8690F840DA3988121D31BE65CB9D3EF83EE6146FEAC861E19B563A, {8{32'h00000000}}};
+      double_block_test(8'h07, MODE_SHA_512_256, double_block_one, double_block_two, tc9_expected, tc10_expected);
 
-      // SHA-384 two block digests.
+      // SHA-384 two block digests and test.
       tc11_expected = 512'h2A7F1D895FD58E0BEAAE96D1A673C741015A2173796C1A88F6352CA156ACAFF7C662113E9EBB4D6417B61A85E2CCF0A937EB9A6660FEB5198F2EBE9A81E6A2C5;
       tc12_expected = {384'h09330C33F71147E83D192FC782CD1B4753111B173B3B05D22FA08086E3B0F712FCC7C71A557E2DB966C3E9FA91746039, {4{32'h00000000}}};
+      double_block_test(8'h08, MODE_SHA_384, double_block_one, double_block_two, tc11_expected, tc12_expected);
+
                      
       display_test_result();
       $display("*** Simulation done.");
