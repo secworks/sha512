@@ -52,8 +52,10 @@ module tb_sha512();
   //----------------------------------------------------------------
   parameter DEBUG = 0;
 
-  parameter CLK_HALF_PERIOD = 2;
+  parameter CLK_PERIOD      = 2;
+  parameter CLK_HALF_PERIOD = CLK_PERIOD / 2;
 
+  
   // The address map.
   parameter ADDR_NAME0         = 8'h00;
   parameter ADDR_NAME1         = 8'h01;
@@ -393,7 +395,7 @@ module tb_sha512();
       tb_address = address;
       tb_cs = 1;
       tb_we = 0;
-      #(2 * CLK_HALF_PERIOD);
+      #(CLK_PERIOD);
       read_data = tb_read_data;
       tb_cs = 0;
 
@@ -475,7 +477,8 @@ module tb_sha512();
       $display("*** TC%01d - Single block test started.", tc_ctr); 
      
       write_block(block);
-      write_word(ADDR_CTRL, CTRL_INIT_VALUE);
+      write_word(ADDR_CTRL, {28'h0000000, mode, CTRL_INIT_VALUE});
+      #(CLK_PERIOD);
       write_word(ADDR_CTRL, 8'h00);
       wait_ready();
       read_digest();
@@ -516,7 +519,8 @@ module tb_sha512();
 
       // First block
       write_block(block0);
-      write_word(ADDR_CTRL, CTRL_INIT_VALUE);
+      write_word(ADDR_CTRL, {28'h0000000, mode, CTRL_INIT_VALUE});
+      #(CLK_PERIOD);
       write_word(ADDR_CTRL, 8'h00);
       wait_ready();
       read_digest();
@@ -535,7 +539,8 @@ module tb_sha512();
 
       // Final block
       write_block(block1);
-      write_word(ADDR_CTRL, CTRL_NEXT_VALUE);
+      write_word(ADDR_CTRL, {28'h0000000, mode, CTRL_NEXT_VALUE});
+      #(CLK_PERIOD);
       write_word(ADDR_CTRL, 8'h00);
       wait_ready();
       read_digest();
