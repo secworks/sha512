@@ -433,7 +433,7 @@ module tb_sha512();
                version[31 : 24], version[23 : 16], version[15 : 8], version[7 : 0]);
     end
   endtask // check_name_version
-  
+
 
   //----------------------------------------------------------------
   // read_digest()
@@ -478,8 +478,56 @@ module tb_sha512();
       digest_data[31  :   0] = read_data;
     end
   endtask // read_digest
-    
   
+
+  //----------------------------------------------------------------
+  // get_mask()
+  //
+  // Create the mask needed for a given mode.
+  //----------------------------------------------------------------
+  function [511 : 0] get_mask(input [1 : 0] mode);
+    begin
+      case (mode)
+        MODE_SHA_512_224:
+          begin
+            if (DEBUG)
+              begin
+                $display("Mode MODE_SHA_512_224");
+              end
+            get_mask = {{7{32'hffffffff}}, {9{32'h00000000}}};
+          end
+
+        MODE_SHA_512_256:
+          begin
+            if (DEBUG)
+              begin
+                $display("Mode MODE_SHA_512_256");
+              end
+            get_mask = {{8{32'hffffffff}}, {8{32'h00000000}}};
+          end
+
+        MODE_SHA_384:
+          begin
+            if (DEBUG)
+              begin
+                $display("Mode MODE_SHA_512_384");
+              end
+            get_mask = {{12{32'hffffffff}}, {4{32'h00000000}}};
+          end
+
+        MODE_SHA_512:
+          begin
+            if (DEBUG)
+              begin
+                $display("Mode MODE_SHA_512");
+              end
+            get_mask = {16{32'hffffffff}};
+          end
+      endcase // case (mode)
+    end
+  endfunction // get_mask
+
+
   //----------------------------------------------------------------
   // single_block_test()
   //
@@ -495,8 +543,8 @@ module tb_sha512();
     reg [511 : 0] masked_data;
 
     begin
-      $display("*** TC%01d - Single block test started.", tc_ctr); 
-     
+      $display("*** TC%01d - Single block test started.", tc_ctr);
+
       write_block(block);
       write_word(ADDR_CTRL, {28'h0000000, mode, CTRL_INIT_VALUE});
       #(CLK_PERIOD);
@@ -504,45 +552,7 @@ module tb_sha512();
       wait_ready();
       read_digest();
 
-
-      case (mode)
-        MODE_SHA_512_224:
-          begin
-            if (DEBUG)
-              begin
-                $display("Mode MODE_SHA_512_224");
-              end
-            mask = {{7{32'hffffffff}}, {9{32'h00000000}}};
-          end
-
-        MODE_SHA_512_256:
-         begin
-            if (DEBUG)
-              begin
-                $display("Mode MODE_SHA_512_256");
-              end
-           mask = {{8{32'hffffffff}}, {8{32'h00000000}}};
-         end
-
-        MODE_SHA_384:
-          begin
-            if (DEBUG)
-              begin
-                $display("Mode MODE_SHA_512_384");
-              end
-            mask = {{12{32'hffffffff}}, {4{32'h00000000}}};
-          end
-
-        MODE_SHA_512:
-          begin
-            if (DEBUG)
-              begin
-                $display("Mode MODE_SHA_512");
-              end
-            mask = {16{32'hffffffff}};
-          end
-      endcase // case (mode)
-
+      mask = get_mask(mode);
       masked_data = digest_data & mask;
 
       if (DEBUG)
@@ -581,6 +591,9 @@ module tb_sha512();
                          input [511 : 0]  expected0,
                          input [511 : 0]  expected1
                         );
+    reg [511 : 0] mask;
+    reg [511 : 0] masked_data1;
+
     begin
       $display("*** TC%01d - Double block test started.", tc_ctr); 
 
@@ -612,7 +625,10 @@ module tb_sha512();
       wait_ready();
       read_digest();
       
-      if (digest_data == expected1)
+      mask = get_mask(mode);
+      masked_data1 = digest_data & mask;
+
+      if (masked_data1 == expected1)
         begin
           $display("TC%01d final block: OK.", tc_ctr);
         end
@@ -620,7 +636,7 @@ module tb_sha512();
         begin
           $display("TC%01d: ERROR in final digest", tc_ctr);
           $display("TC%01d: Expected: 0x%064x", tc_ctr, expected1);
-          $display("TC%01d: Got:      0x%064x", tc_ctr, digest_data);
+          $display("TC%01d: Got:      0x%064x", tc_ctr, masked_data1);
           error_ctr = error_ctr + 1;
         end
 
