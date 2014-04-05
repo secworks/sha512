@@ -147,7 +147,7 @@ module tb_sha512();
   wire          tb_error;
 
   reg [31 : 0]  read_data;
-  reg [255 : 0] digest_data;
+  reg [511 : 0] digest_data;
   
   
   //----------------------------------------------------------------
@@ -444,20 +444,37 @@ module tb_sha512();
   task read_digest();
     begin
       read_word(ADDR_DIGEST0);
-      digest_data[255 : 224] = read_data;
+      digest_data[511 : 480] = read_data;
       read_word(ADDR_DIGEST1);
-      digest_data[223 : 192] = read_data;
+      digest_data[479 : 448] = read_data;
       read_word(ADDR_DIGEST2);
-      digest_data[191 : 160] = read_data;
+      digest_data[447 : 416] = read_data;
       read_word(ADDR_DIGEST3);
-      digest_data[159 : 128] = read_data;
+      digest_data[415 : 384] = read_data;
       read_word(ADDR_DIGEST4);
-      digest_data[127 :  96] = read_data;
+      digest_data[383 : 352] = read_data;
       read_word(ADDR_DIGEST5);
-      digest_data[95  :  64] = read_data;
+      digest_data[351 : 320] = read_data;
       read_word(ADDR_DIGEST6);
-      digest_data[63  :  32] = read_data;
+      digest_data[319 : 288] = read_data;
       read_word(ADDR_DIGEST7);
+      digest_data[287 : 256] = read_data;
+
+      read_word(ADDR_DIGEST8);
+      digest_data[255 : 224] = read_data;
+      read_word(ADDR_DIGEST9);
+      digest_data[223 : 192] = read_data;
+      read_word(ADDR_DIGEST10);
+      digest_data[191 : 160] = read_data;
+      read_word(ADDR_DIGEST11);
+      digest_data[159 : 128] = read_data;
+      read_word(ADDR_DIGEST12);
+      digest_data[127 :  96] = read_data;
+      read_word(ADDR_DIGEST13);
+      digest_data[95  :  64] = read_data;
+      read_word(ADDR_DIGEST14);
+      digest_data[63  :  32] = read_data;
+      read_word(ADDR_DIGEST15);
       digest_data[31  :   0] = read_data;
     end
   endtask // read_digest
