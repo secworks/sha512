@@ -66,8 +66,8 @@ module tb_sha512();
   parameter CTRL_NEXT_BIT      = 1;
   parameter CTRL_MODE_LOW_BIT  = 2;
   parameter CTRL_MODE_HIGH_BIT = 3;
-  parameter CTRL_INIT_VALUE    = 8'h01;
-  parameter CTRL_NEXT_VALUE    = 8'h02;
+  parameter CTRL_INIT_VALUE    = 2'h01;
+  parameter CTRL_NEXT_VALUE    = 2'h02;
 
   parameter ADDR_STATUS        = 8'h09;
   parameter STATUS_READY_BIT   = 0;
@@ -490,6 +490,10 @@ module tb_sha512();
                          input [1 : 0]    mode,
                          input [1023 : 0] block,
                          input [511 : 0]  expected);
+
+    reg [511 : 0] mask;
+    reg [511 : 0] masked_data;
+
     begin
       $display("*** TC%01d - Single block test started.", tc_ctr); 
      
@@ -500,15 +504,61 @@ module tb_sha512();
       wait_ready();
       read_digest();
 
-      if (digest_data == expected)
+
+      case (mode)
+        MODE_SHA_512_224:
+          begin
+            if (DEBUG)
+              begin
+                $display("Mode MODE_SHA_512_224");
+              end
+            mask = {{7{32'hffffffff}}, {9{32'h00000000}}};
+          end
+
+        MODE_SHA_512_256:
+         begin
+            if (DEBUG)
+              begin
+                $display("Mode MODE_SHA_512_256");
+              end
+           mask = {{8{32'hffffffff}}, {8{32'h00000000}}};
+         end
+
+        MODE_SHA_384:
+          begin
+            if (DEBUG)
+              begin
+                $display("Mode MODE_SHA_512_384");
+              end
+            mask = {{12{32'hffffffff}}, {4{32'h00000000}}};
+          end
+
+        MODE_SHA_512:
+          begin
+            if (DEBUG)
+              begin
+                $display("Mode MODE_SHA_512");
+              end
+            mask = {16{32'hffffffff}};
+          end
+      endcase // case (mode)
+
+      masked_data = digest_data & mask;
+
+      if (DEBUG)
+        begin
+          $display("masked_data = 0x%0128x", masked_data);
+        end
+
+      if (masked_data == expected)
         begin
           $display("TC%01d: OK.", tc_ctr);
         end
       else
         begin
           $display("TC%01d: ERROR.", tc_ctr);
-          $display("TC%01d: Expected: 0x%064x", tc_ctr, expected);
-          $display("TC%01d: Got:      0x%064x", tc_ctr, digest_data);
+          $display("TC%01d: Expected: 0x%0128x", tc_ctr, expected);
+          $display("TC%01d: Got:      0x%0128x", tc_ctr, masked_data);
           error_ctr = error_ctr + 1;
         end
       $display("*** TC%01d - Single block test done.", tc_ctr); 
