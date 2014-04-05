@@ -245,7 +245,9 @@ module tb_sha512();
     begin
       $display("*** Toggle reset.");
       tb_reset_n = 0;
+
       #(4 * CLK_HALF_PERIOD);
+
       tb_reset_n = 1;
     end
   endtask // reset_dut
@@ -261,13 +263,13 @@ module tb_sha512();
     begin
       cycle_ctr = 32'h00000000;
       error_ctr = 32'h00000000;
-      tc_ctr = 32'h00000000;
+      tc_ctr    = 32'h00000000;
       
-      tb_clk = 0;
-      tb_reset_n = 0;
-      tb_cs = 0;
-      tb_we = 0;
-      tb_address = 6'h00;
+      tb_clk        = 0;
+      tb_reset_n    = 0;
+      tb_cs         = 0;
+      tb_we         = 0;
+      tb_address    = 6'h00;
       tb_write_data = 32'h00000000;
     end
   endtask // init_dut
@@ -635,8 +637,8 @@ module tb_sha512();
       else
         begin
           $display("TC%01d: ERROR in final digest", tc_ctr);
-          $display("TC%01d: Expected: 0x%064x", tc_ctr, expected1);
-          $display("TC%01d: Got:      0x%064x", tc_ctr, masked_data1);
+          $display("TC%01d: Expected: 0x%0128x", tc_ctr, expected1);
+          $display("TC%01d: Got:      0x%0128x", tc_ctr, masked_data1);
           error_ctr = error_ctr + 1;
         end
 
