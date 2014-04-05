@@ -561,7 +561,6 @@ module tb_sha512();
       write_block(block);
       write_word(ADDR_CTRL, {28'h0000000, mode, CTRL_INIT_VALUE});
       #(CLK_PERIOD);
-      write_word(ADDR_CTRL, 8'h00);
       wait_ready();
       read_digest();
 
@@ -614,7 +613,6 @@ module tb_sha512();
       write_block(block0);
       write_word(ADDR_CTRL, {28'h0000000, mode, CTRL_INIT_VALUE});
       #(CLK_PERIOD);
-      write_word(ADDR_CTRL, 8'h00);
       wait_ready();
       read_digest();
 
@@ -634,7 +632,6 @@ module tb_sha512();
       write_block(block1);
       write_word(ADDR_CTRL, {28'h0000000, mode, CTRL_NEXT_VALUE});
       #(CLK_PERIOD);
-      write_word(ADDR_CTRL, 8'h00);
       wait_ready();
       read_digest();
       
