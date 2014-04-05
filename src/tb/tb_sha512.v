@@ -224,12 +224,23 @@ module tb_sha512();
 
       $display("block8  = 0x%08x, block9  = 0x%08x, block10 = 0x%08x,  block11 = 0x%08x",
                dut.block8_reg, dut.block9_reg, dut.block10_reg, dut.block11_reg);
-     $display("block12 = 0x%08x, block13 = 0x%08x, block14 = 0x%08x,  block15 = 0x%08x",
+      $display("block12 = 0x%08x, block13 = 0x%08x, block14 = 0x%08x,  block15 = 0x%08x",
                dut.block12_reg, dut.block13_reg, dut.block14_reg, dut.block15_reg);
+
+      $display("block16 = 0x%08x, block17 = 0x%08x, block18 = 0x%08x,  block19 = 0x%08x",
+               dut.block16_reg, dut.block17_reg, dut.block18_reg, dut.block19_reg);
+      $display("block20 = 0x%08x, block21 = 0x%08x, block22 = 0x%08x,  block23 = 0x%08x",
+               dut.block20_reg, dut.block21_reg, dut.block22_reg, dut.block23_reg);
+
+      $display("block24 = 0x%08x, block25 = 0x%08x, block26 = 0x%08x,  block27 = 0x%08x",
+               dut.block24_reg, dut.block25_reg, dut.block26_reg, dut.block27_reg);
+      $display("block28 = 0x%08x, block29 = 0x%08x, block30 = 0x%08x,  block31 = 0x%08x",
+               dut.block28_reg, dut.block29_reg, dut.block30_reg, dut.block31_reg);
+
       $display("");
       
       $display("Digest:");
-      $display("digest = 0x%064x", dut.digest_reg);
+      $display("digest = 0x%0128x", dut.digest_reg);
       $display("");
       
     end
@@ -682,7 +693,7 @@ module tb_sha512();
 
       // dump_dut_state();
       // write_word(ADDR_BLOCK0, 32'hdeadbeef);
-      // dump_dut_state();
+      dump_dut_state();
       // read_word(ADDR_BLOCK0);
       // dump_dut_state();
 
@@ -729,6 +740,8 @@ module tb_sha512();
       tc11_expected = 512'h2A7F1D895FD58E0BEAAE96D1A673C741015A2173796C1A88F6352CA156ACAFF7C662113E9EBB4D6417B61A85E2CCF0A937EB9A6660FEB5198F2EBE9A81E6A2C5;
       tc12_expected = {384'h09330C33F71147E83D192FC782CD1B4753111B173B3B05D22FA08086E3B0F712FCC7C71A557E2DB966C3E9FA91746039, {4{32'h00000000}}};
       double_block_test(8'h08, MODE_SHA_384, double_block_one, double_block_two, tc11_expected, tc12_expected);
+
+      dump_dut_state();
       
       display_test_result();
       
