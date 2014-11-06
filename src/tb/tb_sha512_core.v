@@ -8,30 +8,30 @@
 // Author: Joachim Strombergson
 // Copyright (c) 2013, Secworks Sweden AB
 // All rights reserved.
-// 
-// Redistribution and use in source and binary forms, with or 
-// without modification, are permitted provided that the following 
-// conditions are met: 
-// 
-// 1. Redistributions of source code must retain the above copyright 
-//    notice, this list of conditions and the following disclaimer. 
-// 
-// 2. Redistributions in binary form must reproduce the above copyright 
-//    notice, this list of conditions and the following disclaimer in 
-//    the documentation and/or other materials provided with the 
-//    distribution. 
-// 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-// COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+//
+// Redistribution and use in source and binary forms, with or
+// without modification, are permitted provided that the following
+// conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright
+//    notice, this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in
+//    the documentation and/or other materials provided with the
+//    distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+// COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
 // BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 // ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //======================================================================
@@ -46,7 +46,7 @@
 // Test module.
 //------------------------------------------------------------------
 module tb_sha512_core();
-  
+
   //----------------------------------------------------------------
   // Internal constant and parameter definitions.
   //----------------------------------------------------------------
@@ -59,8 +59,8 @@ module tb_sha512_core();
   parameter MODE_SHA_512_256 = 1;
   parameter MODE_SHA_384     = 2;
   parameter MODE_SHA_512     = 3;
-  
-  
+
+
   //----------------------------------------------------------------
   // Register and Wire declarations.
   //----------------------------------------------------------------
@@ -77,39 +77,39 @@ module tb_sha512_core();
   wire           tb_ready;
   wire [511 : 0] tb_digest;
   wire           tb_digest_valid;
-  
-  
+
+
   //----------------------------------------------------------------
   // Device Under Test.
   //----------------------------------------------------------------
   sha512_core dut(
                    .clk(tb_clk),
                    .reset_n(tb_reset_n),
-                 
+
                    .init(tb_init),
                    .next(tb_next),
                    .mode(tb_mode),
 
                    .block(tb_block),
-                   
+
                    .ready(tb_ready),
-                   
+
                    .digest(tb_digest),
                    .digest_valid(tb_digest_valid)
                  );
-  
+
 
   //----------------------------------------------------------------
   // clk_gen
   //
   // Always running clock generator process.
   //----------------------------------------------------------------
-  always 
+  always
     begin : clk_gen
       #CLK_HALF_PERIOD;
       tb_clk = !tb_clk;
     end // clk_gen
-    
+
 
   //----------------------------------------------------------------
   // sys_monitor()
@@ -127,7 +127,7 @@ module tb_sha512_core();
         end
     end
 
-  
+
   //----------------------------------------------------------------
   // dump_dut_state()
   //
@@ -138,40 +138,40 @@ module tb_sha512_core();
       $display("State of DUT");
       $display("------------");
       $display("Inputs and outputs:");
-      $display("init   = 0x%01x, next  = 0x%01x. mode = 0x%01x", 
+      $display("init   = 0x%01x, next  = 0x%01x. mode = 0x%01x",
                dut.init, dut.next, dut.mode);
       $display("block  = 0x%0128x", dut.block);
 
-      $display("ready  = 0x%01x, valid = 0x%01x", 
+      $display("ready  = 0x%01x, valid = 0x%01x",
                dut.ready, dut.digest_valid);
       $display("digest = 0x%064x", dut.digest);
-      $display("H0_reg = 0x%08x, H1_reg = 0x%08x, H2_reg = 0x%08x, H3_reg = 0x%08x", 
+      $display("H0_reg = 0x%08x, H1_reg = 0x%08x, H2_reg = 0x%08x, H3_reg = 0x%08x",
                dut.H0_reg, dut.H1_reg, dut.H2_reg, dut.H3_reg);
-      $display("H4_reg = 0x%08x, H5_reg = 0x%08x, H6_reg = 0x%08x, H7_reg = 0x%08x", 
+      $display("H4_reg = 0x%08x, H5_reg = 0x%08x, H6_reg = 0x%08x, H7_reg = 0x%08x",
                dut.H4_reg, dut.H5_reg, dut.H6_reg, dut.H7_reg);
       $display("");
-      
+
       $display("Control signals and counter:");
       $display("sha512_ctrl_reg = 0x%02x", dut.sha512_ctrl_reg);
-      $display("digest_init     = 0x%01x, digest_update = 0x%01x", 
+      $display("digest_init     = 0x%01x, digest_update = 0x%01x",
                dut.digest_init, dut.digest_update);
-      $display("state_init      = 0x%01x, state_update  = 0x%01x", 
+      $display("state_init      = 0x%01x, state_update  = 0x%01x",
                dut.state_init, dut.state_update);
-      $display("first_block     = 0x%01x, ready_flag    = 0x%01x, w_init    = 0x%01x", 
+      $display("first_block     = 0x%01x, ready_flag    = 0x%01x, w_init    = 0x%01x",
                dut.first_block, dut.ready_flag, dut.w_init);
-      $display("t_ctr_inc       = 0x%01x, t_ctr_rst     = 0x%01x, t_ctr_reg = 0x%02x", 
+      $display("t_ctr_inc       = 0x%01x, t_ctr_rst     = 0x%01x, t_ctr_reg = 0x%02x",
                dut.t_ctr_inc, dut.t_ctr_rst, dut.t_ctr_reg);
       $display("");
 
       $display("State registers:");
-      $display("a_reg = 0x%08x, b_reg = 0x%08x, c_reg = 0x%08x, d_reg = 0x%08x", 
+      $display("a_reg = 0x%08x, b_reg = 0x%08x, c_reg = 0x%08x, d_reg = 0x%08x",
                dut.a_reg, dut.b_reg, dut.c_reg, dut.d_reg);
-      $display("e_reg = 0x%08x, f_reg = 0x%08x, g_reg = 0x%08x, h_reg = 0x%08x", 
+      $display("e_reg = 0x%08x, f_reg = 0x%08x, g_reg = 0x%08x, h_reg = 0x%08x",
                dut.e_reg, dut.f_reg, dut.g_reg, dut.h_reg);
       $display("");
-      $display("a_new = 0x%08x, b_new = 0x%08x, c_new = 0x%08x, d_new = 0x%08x", 
+      $display("a_new = 0x%08x, b_new = 0x%08x, c_new = 0x%08x, d_new = 0x%08x",
                dut.a_new, dut.b_new, dut.c_new, dut.d_new);
-      $display("e_new = 0x%08x, f_new = 0x%08x, g_new = 0x%08x, h_new = 0x%08x", 
+      $display("e_new = 0x%08x, f_new = 0x%08x, g_new = 0x%08x, h_new = 0x%08x",
                dut.e_new, dut.f_new, dut.g_new, dut.h_new);
       $display("");
 
@@ -182,7 +182,7 @@ module tb_sha512_core();
     end
   endtask // dump_dut_state
 
-  
+
   //----------------------------------------------------------------
   // dump_dut_wmem()
   //
@@ -192,19 +192,23 @@ module tb_sha512_core();
     begin
       $display("State of DUT WMEM");
       $display("-----------------");
-      $display("W[00] = 0x%016x, W[01] = 0x%016x, W[02] = 0x%016x, W[03] = 0x%016x", 
-               dut.w_mem.w_mem[00], dut.w_mem.w_mem[01], dut.w_mem.w_mem[02], dut.w_mem.w_mem[03]);
-      $display("W[04] = 0x%016x, W[05] = 0x%016x, W[06] = 0x%016x, W[07] = 0x%016x", 
-               dut.w_mem.w_mem[04], dut.w_mem.w_mem[05], dut.w_mem.w_mem[06], dut.w_mem.w_mem[07]);
-      $display("W[08] = 0x%016x, W[09] = 0x%016x, W[10] = 0x%016x, W[11] = 0x%016x", 
-               dut.w_mem.w_mem[08], dut.w_mem.w_mem[09], dut.w_mem.w_mem[10], dut.w_mem.w_mem[11]);
-      $display("W[12] = 0x%016x, W[13] = 0x%016x, W[14] = 0x%016x, W[15] = 0x%016x", 
-               dut.w_mem.w_mem[12], dut.w_mem.w_mem[13], dut.w_mem.w_mem[14], dut.w_mem.w_mem[15]);
+      $display("W[00] = 0x%016x, W[01] = 0x%016x, W[02] = 0x%016x, W[03] = 0x%016x",
+               dut.w_mem_inst.w_mem[00], dut.w_mem_inst.w_mem[01],
+               dut.w_mem_inst.w_mem[02], dut.w_mem_inst.w_mem[03]);
+      $display("W[04] = 0x%016x, W[05] = 0x%016x, W[06] = 0x%016x, W[07] = 0x%016x",
+               dut.w_mem_inst.w_mem[04], dut.w_mem_inst.w_mem[05],
+               dut.w_mem_inst.w_mem[06], dut.w_mem_inst.w_mem[07]);
+      $display("W[08] = 0x%016x, W[09] = 0x%016x, W[10] = 0x%016x, W[11] = 0x%016x",
+               dut.w_mem_inst.w_mem[08], dut.w_mem_inst.w_mem[09],
+               dut.w_mem_inst.w_mem[10], dut.w_mem_inst.w_mem[11]);
+      $display("W[12] = 0x%016x, W[13] = 0x%016x, W[14] = 0x%016x, W[15] = 0x%016x",
+               dut.w_mem_inst.w_mem[12], dut.w_mem_inst.w_mem[13],
+               dut.w_mem_inst.w_mem[14], dut.w_mem_inst.w_mem[15]);
       $display("");
     end
   endtask // dump_dut_wmem
 
-  
+
   //----------------------------------------------------------------
   // reset_dut()
   //
@@ -219,7 +223,7 @@ module tb_sha512_core();
     end
   endtask // reset_dut
 
-  
+
   //----------------------------------------------------------------
   // init_sim()
   //
@@ -231,7 +235,7 @@ module tb_sha512_core();
       cycle_ctr = 0;
       error_ctr = 0;
       tc_ctr = 0;
-      
+
       tb_clk = 0;
       tb_reset_n = 1;
 
@@ -243,7 +247,7 @@ module tb_sha512_core();
     end
   endtask // init_dut
 
-  
+
   //----------------------------------------------------------------
   // display_test_result()
   //
@@ -261,7 +265,7 @@ module tb_sha512_core();
         end
     end
   endtask // display_test_result
-  
+
 
   //----------------------------------------------------------------
   // wait_ready()
@@ -281,7 +285,7 @@ module tb_sha512_core();
     end
   endtask // wait_ready
 
-  
+
   //----------------------------------------------------------------
   // single_block_test()
   //
@@ -296,13 +300,13 @@ module tb_sha512_core();
    begin
      $display("*** TC %0d single block test case started.", tc_number);
      tc_ctr = tc_ctr + 1;
-     
+
      tb_block = block;
      tb_mode  = mode;
      tb_init = 1;
      #(2 * CLK_PERIOD);
      tb_init = 0;
-     
+
      wait_ready();
 
      case (mode)
@@ -310,41 +314,41 @@ module tb_sha512_core();
          begin
            mask = {{7{32'hffffffff}}, {9{32'h00000000}}};
          end
-       
+
        MODE_SHA_512_256:
          begin
            mask = {{8{32'hffffffff}}, {8{32'h00000000}}};
          end
-       
+
        MODE_SHA_384:
          begin
            mask = {{12{32'hffffffff}}, {4{32'h00000000}}};
          end
-       
+
        MODE_SHA_512:
          begin
            mask = {16{32'hffffffff}};
          end
      endcase // case (mode)
-      
+
      if ((tb_digest & mask) == expected)
        begin
          $display("*** TC %0d successful.", tc_number);
          $display("");
-       end 
+       end
      else
        begin
          $display("*** ERROR: TC %0d NOT successful.", tc_number);
          $display("Expected: 0x%064x", expected);
          $display("Got:      0x%064x", tb_digest);
          $display("");
-         
+
          error_ctr = error_ctr + 1;
        end
    end
   endtask // single_block_test
 
-  
+
   //----------------------------------------------------------------
   // double_block_test()
   //
@@ -375,7 +379,7 @@ module tb_sha512_core();
      wait_ready();
      db_digest1 = tb_digest;
      $display("*** TC %0d first block done.", tc_number);
-     
+
      $display("*** TC %0d second block started.", tc_number);
      tb_block = block2;
      tb_next = 1;
@@ -383,12 +387,12 @@ module tb_sha512_core();
      tb_next = 0;
      wait_ready();
      $display("*** TC %0d second block done.", tc_number);
-      
+
      if (db_digest1 == expected1)
        begin
          $display("*** TC %0d first block successful", tc_number);
          $display("");
-       end 
+       end
      else
        begin
          $display("*** ERROR: TC %0d first block NOT successful", tc_number);
@@ -403,17 +407,17 @@ module tb_sha512_core();
          begin
            mask = {{7{32'hffffffff}}, {9{32'h00000000}}};
          end
-       
+
        MODE_SHA_512_256:
          begin
            mask = {{8{32'hffffffff}}, {8{32'h00000000}}};
          end
-       
+
        MODE_SHA_384:
          begin
            mask = {{12{32'hffffffff}}, {4{32'h00000000}}};
          end
-       
+
        MODE_SHA_512:
          begin
            mask = {16{32'hffffffff}};
@@ -424,7 +428,7 @@ module tb_sha512_core();
        begin
          $display("*** TC %0d second block successful", tc_number);
          $display("");
-       end 
+       end
      else
        begin
          $display("*** ERROR: TC %0d second block NOT successful", tc_number);
@@ -440,11 +444,11 @@ module tb_sha512_core();
        end
    end
   endtask // double_block_test
-                         
-    
+
+
   //----------------------------------------------------------------
   // sha512_core_test
-  // The main test functionality. 
+  // The main test functionality.
   //
   // Test cases taken from:
   // http://csrc.nist.gov/groups/ST/toolkit/documents/Examples/SHA_All.pdf
@@ -456,7 +460,7 @@ module tb_sha512_core();
       reg [511 : 0]  tc2_expected;
       reg [511 : 0]  tc3_expected;
       reg [511 : 0]  tc4_expected;
-      
+
       reg [1024 : 0] double_block_one;
       reg [1024 : 0] double_block_two;
       reg [511 : 0]  tc5_expected;
@@ -467,7 +471,7 @@ module tb_sha512_core();
       reg [511 : 0]  tc10_expected;
       reg [511 : 0]  tc11_expected;
       reg [511 : 0]  tc12_expected;
-      
+
       $display("   -- Testbench for sha512 core started --");
 
       init_sim();
@@ -481,7 +485,7 @@ module tb_sha512_core();
       // SHA-512 single block digest and test.
       tc1_expected = 512'hDDAF35A193617ABACC417349AE20413112E6FA4E89A97EA20A9EEEE64B55D39A2192992A274FC1A836BA3C23A3FEEBBD454D4423643CE80E2A9AC94FA54CA49F;
       single_block_test(8'h01, MODE_SHA_512, single_block, tc1_expected);
-      
+
       // SHA-512_224 single block digest and test.
       tc2_expected = {224'h4634270F707B6A54DAAE7530460842E20E37ED265CEEE9A43E8924AA, {9{32'h00000000}}};
       single_block_test(8'h02, MODE_SHA_512_224, single_block, tc2_expected);
@@ -519,7 +523,7 @@ module tb_sha512_core();
       tc12_expected = {384'h09330C33F71147E83D192FC782CD1B4753111B173B3B05D22FA08086E3B0F712FCC7C71A557E2DB966C3E9FA91746039, {4{32'h00000000}}};
       double_block_test(8'h08, MODE_SHA_384, double_block_one, double_block_two, tc11_expected, tc12_expected);
 
-                     
+
       display_test_result();
       $display("*** Simulation done.");
       $finish;

@@ -2,37 +2,37 @@
 //
 // sha512_w_mem_regs.v
 // -------------------
-// The W memory for the SHA-512 core. This version uses 16 
+// The W memory for the SHA-512 core. This version uses 16
 // 32-bit registers as a sliding window to generate the 64 words.
 //
 //
 // Author: Joachim Strombergson
 // Copyright (c) 2014 Secworks Sweden AB
 // All rights reserved.
-// 
-// Redistribution and use in source and binary forms, with or 
-// without modification, are permitted provided that the following 
-// conditions are met: 
-// 
-// 1. Redistributions of source code must retain the above copyright 
-//    notice, this list of conditions and the following disclaimer. 
-// 
-// 2. Redistributions in binary form must reproduce the above copyright 
-//    notice, this list of conditions and the following disclaimer in 
-//    the documentation and/or other materials provided with the 
-//    distribution. 
-// 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-// COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+//
+// Redistribution and use in source and binary forms, with or
+// without modification, are permitted provided that the following
+// conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright
+//    notice, this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in
+//    the documentation and/or other materials provided with the
+//    distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+// COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
 // BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 // ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //======================================================================
@@ -48,14 +48,14 @@ module sha512_w_mem(
                     output wire [63 : 0]  w
                    );
 
-  
+
   //----------------------------------------------------------------
   // Internal constant and parameter definitions.
   //----------------------------------------------------------------
   parameter CTRL_IDLE   = 1'b0;
   parameter CTRL_UPDATE = 1'b1;
-  
-  
+
+
   //----------------------------------------------------------------
   // Registers including update variables and write enable.
   //----------------------------------------------------------------
@@ -77,31 +77,31 @@ module sha512_w_mem(
   reg [63 : 0] w_mem14_new;
   reg [63 : 0] w_mem15_new;
   reg          w_mem_we;
-  
+
   reg [6 : 0] w_ctr_reg;
   reg [6 : 0] w_ctr_new;
   reg         w_ctr_we;
   reg         w_ctr_inc;
   reg         w_ctr_rst;
-  
+
   reg         sha512_w_mem_ctrl_reg;
   reg         sha512_w_mem_ctrl_new;
   reg         sha512_w_mem_ctrl_we;
-  
-  
+
+
   //----------------------------------------------------------------
   // Wires.
   //----------------------------------------------------------------
   reg [63 : 0] w_tmp;
   reg [63 : 0] w_new;
-  
-  
+
+
   //----------------------------------------------------------------
   // Concurrent connectivity for ports etc.
   //----------------------------------------------------------------
   assign w = w_tmp;
-  
-  
+
+
   //----------------------------------------------------------------
   // reg_update
   // Update functionality for all registers in the core.
@@ -152,12 +152,12 @@ module sha512_w_mem(
               w_mem[14] <= w_mem14_new;
               w_mem[15] <= w_mem15_new;
             end
-          
+
           if (w_ctr_we)
             begin
               w_ctr_reg <= w_ctr_new;
             end
-          
+
           if (sha512_w_mem_ctrl_we)
             begin
               sha512_w_mem_ctrl_reg <= sha512_w_mem_ctrl_new;
@@ -165,7 +165,7 @@ module sha512_w_mem(
         end
     end // reg_update
 
-  
+
   //----------------------------------------------------------------
   // select_w
   //
@@ -183,7 +183,7 @@ module sha512_w_mem(
           w_tmp = w_new;
         end
     end // select_w
-  
+
 
   //----------------------------------------------------------------
   // w_new_logic
@@ -217,7 +217,7 @@ module sha512_w_mem(
       w_mem14_new = 64'h0000000000000000;
       w_mem15_new = 64'h0000000000000000;
       w_mem_we    = 0;
-      
+
       w_0  = w_mem[0];
       w_1  = w_mem[1];
       w_9  = w_mem[9];
@@ -226,13 +226,13 @@ module sha512_w_mem(
       d0 = {w_1[0],     w_1[63 : 1]} ^ // ROTR1
            {w_1[7 : 0], w_1[63 : 8]} ^ // ROTR8
            {7'b0000000, w_1[63 : 7]};  // SHR7
-      
+
       d1 = {w_14[18 : 0], w_14[63 : 19]} ^ // ROTR19
            {w_14[60 : 0], w_14[63 : 61]} ^ // ROTR61
            {6'b000000,    w_14[63 : 6]};   // SHR6
-      
+
       w_new = w_0 + d0 + w_9 + d1;
-      
+
       if (init)
         begin
           w_mem00_new = block[1023 : 960];
@@ -274,8 +274,8 @@ module sha512_w_mem(
           w_mem_we    = 1;
         end
     end // w_mem_update_logic
-  
-  
+
+
   //----------------------------------------------------------------
   // w_ctr
   // W schedule adress counter. Counts from 0x10 to 0x3f and
@@ -283,9 +283,9 @@ module sha512_w_mem(
   //----------------------------------------------------------------
   always @*
     begin : w_ctr
-      w_ctr_new = 0;
+      w_ctr_new = 7'h00;
       w_ctr_we  = 0;
-      
+
       if (w_ctr_rst)
         begin
           w_ctr_new = 7'h00;
@@ -299,7 +299,7 @@ module sha512_w_mem(
         end
     end // w_ctr
 
-  
+
   //----------------------------------------------------------------
   // sha512_w_mem_fsm
   // Logic for the w shedule FSM.
@@ -308,10 +308,10 @@ module sha512_w_mem(
     begin : sha512_w_mem_fsm
       w_ctr_rst = 0;
       w_ctr_inc = 0;
-      
+
       sha512_w_mem_ctrl_new = CTRL_IDLE;
       sha512_w_mem_ctrl_we  = 0;
-      
+
       case (sha512_w_mem_ctrl_reg)
         CTRL_IDLE:
           begin
@@ -322,15 +322,15 @@ module sha512_w_mem(
                 sha512_w_mem_ctrl_we  = 1;
               end
           end
-        
+
         CTRL_UPDATE:
           begin
             if (next)
               begin
                 w_ctr_inc = 1;
               end
-            
-            if (w_ctr_reg == 6'h3f)
+
+            if (w_ctr_reg == 7'h3f)
               begin
                 sha512_w_mem_ctrl_new = CTRL_IDLE;
                 sha512_w_mem_ctrl_we  = 1;

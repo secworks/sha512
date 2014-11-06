@@ -9,30 +9,30 @@
 // Author: Joachim Strombergson
 // Copyright (c) 2014 Secworks Sweden AB
 // All rights reserved.
-// 
-// Redistribution and use in source and binary forms, with or 
-// without modification, are permitted provided that the following 
-// conditions are met: 
-// 
-// 1. Redistributions of source code must retain the above copyright 
-//    notice, this list of conditions and the following disclaimer. 
-// 
-// 2. Redistributions in binary form must reproduce the above copyright 
-//    notice, this list of conditions and the following disclaimer in 
-//    the documentation and/or other materials provided with the 
-//    distribution. 
-// 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-// COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+//
+// Redistribution and use in source and binary forms, with or
+// without modification, are permitted provided that the following
+// conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright
+//    notice, this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in
+//    the documentation and/or other materials provided with the
+//    distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+// COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
 // BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 // ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //======================================================================
@@ -40,29 +40,29 @@
 module sha512_core(
                    input wire            clk,
                    input wire            reset_n,
-                 
+
                    input wire            init,
                    input wire            next,
                    input wire [1 : 0]    mode,
-                   
+
                    input wire [1023 : 0] block,
-                   
+
                    output wire           ready,
                    output wire [511 : 0] digest,
                    output wire           digest_valid
                   );
 
-  
+
   //----------------------------------------------------------------
   // Internal constant and parameter definitions.
   //----------------------------------------------------------------
   parameter SHA512_ROUNDS = 79;
-  
+
   parameter CTRL_IDLE   = 0;
   parameter CTRL_ROUNDS = 1;
   parameter CTRL_DONE   = 2;
-  
-  
+
+
   //----------------------------------------------------------------
   // Registers including update variables and write enable.
   //----------------------------------------------------------------
@@ -101,7 +101,7 @@ module sha512_core(
   reg [63 : 0] H7_reg;
   reg [63 : 0] H7_new;
   reg          H_we;
-  
+
   reg [6 : 0] t_ctr_reg;
   reg [6 : 0] t_ctr_new;
   reg         t_ctr_we;
@@ -111,12 +111,12 @@ module sha512_core(
   reg digest_valid_reg;
   reg digest_valid_new;
   reg digest_valid_we;
-  
+
   reg [1 : 0] sha512_ctrl_reg;
   reg [1 : 0] sha512_ctrl_new;
   reg         sha512_ctrl_we;
 
-  
+
   //----------------------------------------------------------------
   // Wires.
   //----------------------------------------------------------------
@@ -138,7 +138,7 @@ module sha512_core(
   reg           w_init;
   reg           w_next;
   wire [63 : 0] w_data;
-              
+
   wire [63 : 0] H0_0;
   wire [63 : 0] H0_1;
   wire [63 : 0] H0_2;
@@ -148,53 +148,53 @@ module sha512_core(
   wire [63 : 0] H0_6;
   wire [63 : 0] H0_7;
 
-  
+
   //----------------------------------------------------------------
   // Module instantiantions.
   //----------------------------------------------------------------
-  sha512_k_constants k_constants(
-                                 .addr(t_ctr_reg),
-                                 .K(k_data)
-                                 );
-
-  
-  sha512_h_constants h_constants(
-                                 .mode(mode),
-                                 
-                                 .H0(H0_0),
-                                 .H1(H0_1),
-                                 .H2(H0_2),
-                                 .H3(H0_3),
-                                 .H4(H0_4),
-                                 .H5(H0_5),
-                                 .H6(H0_6),
-                                 .H7(H0_7)
-                                );  
+  sha512_k_constants k_constants_inst(
+                                      .addr(t_ctr_reg),
+                                      .K(k_data)
+                                     );
 
 
-  sha512_w_mem w_mem(
-                     .clk(clk),
-                     .reset_n(reset_n),
+  sha512_h_constants h_constants_inst(
+                                      .mode(mode),
 
-                     .block(block),
+                                      .H0(H0_0),
+                                      .H1(H0_1),
+                                      .H2(H0_2),
+                                      .H3(H0_3),
+                                      .H4(H0_4),
+                                      .H5(H0_5),
+                                      .H6(H0_6),
+                                      .H7(H0_7)
+                                     );
 
-                     .init(w_init),
-                     .next(w_next),
-                     .w(w_data)
-                   );
 
-  
+  sha512_w_mem w_mem_inst(
+                          .clk(clk),
+                          .reset_n(reset_n),
+
+                          .block(block),
+
+                          .init(w_init),
+                          .next(w_next),
+                          .w(w_data)
+                         );
+
+
   //----------------------------------------------------------------
   // Concurrent connectivity for ports etc.
   //----------------------------------------------------------------
   assign ready = ready_flag;
-  
+
   assign digest = {H0_reg, H1_reg, H2_reg, H3_reg,
                    H4_reg, H5_reg, H6_reg, H7_reg};
-  
+
   assign digest_valid = digest_valid_reg;
-  
-  
+
+
   //----------------------------------------------------------------
   // reg_update
   // Update functionality for all registers in the core.
@@ -227,7 +227,7 @@ module sha512_core(
         end
       else
         begin
-          
+
           if (a_h_we)
             begin
               a_reg <= a_new;
@@ -251,7 +251,7 @@ module sha512_core(
               H6_reg <= H6_new;
               H7_reg <= H7_new;
             end
-          
+
           if (t_ctr_we)
             begin
               t_ctr_reg <= t_ctr_new;
@@ -261,7 +261,7 @@ module sha512_core(
             begin
               digest_valid_reg <= digest_valid_new;
             end
-          
+
           if (sha512_ctrl_we)
             begin
               sha512_ctrl_reg <= sha512_ctrl_new;
@@ -269,7 +269,7 @@ module sha512_core(
         end
     end // reg_update
 
-  
+
   //----------------------------------------------------------------
   // digest_logic
   //
@@ -325,12 +325,12 @@ module sha512_core(
       reg [63 : 0] sum1;
       reg [63 : 0] ch;
 
-      sum1 = {e_reg[13 : 0], e_reg[63 : 14]} ^ 
-             {e_reg[17 : 0], e_reg[63 : 18]} ^ 
+      sum1 = {e_reg[13 : 0], e_reg[63 : 14]} ^
+             {e_reg[17 : 0], e_reg[63 : 18]} ^
              {e_reg[40 : 0], e_reg[63 : 41]};
 
       ch = (e_reg & f_reg) ^ ((~e_reg) & g_reg);
-      
+
       t1 = h_reg + sum1 + ch + k_data + w_data;
     end // t1_logic
 
@@ -350,11 +350,11 @@ module sha512_core(
              {a_reg[38 : 0], a_reg[63 : 39]};
 
       maj = (a_reg & b_reg) ^ (a_reg & c_reg) ^ (b_reg & c_reg);
-      
+
       t2 = sum0 + maj;
     end // t2_logic
-  
-  
+
+
   //----------------------------------------------------------------
   // state_logic
   //
@@ -363,9 +363,6 @@ module sha512_core(
   //----------------------------------------------------------------
   always @*
     begin : state_logic
-      reg [63 : 0] tmp1;
-      reg [63 : 0] tmp2;
-      
       a_new  = 64'h00000000;
       b_new  = 64'h00000000;
       c_new  = 64'h00000000;
@@ -375,7 +372,7 @@ module sha512_core(
       g_new  = 64'h00000000;
       h_new  = 64'h00000000;
       a_h_we = 0;
-      
+
       if (state_init)
         begin
           if (first_block)
@@ -403,7 +400,7 @@ module sha512_core(
               a_h_we = 1;
             end
         end
-      
+
       if (state_update)
         begin
           a_new  = t1 + t2;
@@ -418,18 +415,18 @@ module sha512_core(
         end
     end // state_logic
 
-  
+
   //----------------------------------------------------------------
   // t_ctr
   //
-  // Update logic for the round counter, a monotonically 
+  // Update logic for the round counter, a monotonically
   // increasing counter with reset.
   //----------------------------------------------------------------
   always @*
     begin : t_ctr
       t_ctr_new = 7'h00;
       t_ctr_we  = 0;
-      
+
       if (t_ctr_rst)
         begin
           t_ctr_new = 7'h00;
@@ -443,7 +440,7 @@ module sha512_core(
         end
     end // t_ctr
 
-  
+
   //----------------------------------------------------------------
   // sha512_ctrl_fsm
   //
@@ -456,28 +453,28 @@ module sha512_core(
 
       state_init       = 0;
       state_update     = 0;
-      
+
       first_block      = 0;
       ready_flag       = 0;
 
       w_init           = 0;
       w_next           = 0;
-      
+
       t_ctr_inc        = 0;
       t_ctr_rst        = 0;
-      
+
       digest_valid_new = 0;
       digest_valid_we  = 0;
-      
+
       sha512_ctrl_new  = CTRL_IDLE;
       sha512_ctrl_we   = 0;
 
-      
+
       case (sha512_ctrl_reg)
         CTRL_IDLE:
           begin
             ready_flag = 1;
-            
+
             if (init)
               begin
                 digest_init      = 1;
@@ -503,7 +500,7 @@ module sha512_core(
               end
           end
 
-        
+
         CTRL_ROUNDS:
           begin
             w_next       = 1;
@@ -517,7 +514,7 @@ module sha512_core(
               end
           end
 
-        
+
         CTRL_DONE:
           begin
             digest_update    = 1;
@@ -529,7 +526,7 @@ module sha512_core(
           end
       endcase // case (sha512_ctrl_reg)
     end // sha512_ctrl_fsm
-    
+
 endmodule // sha512_core
 
 //======================================================================
