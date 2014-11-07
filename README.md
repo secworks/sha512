@@ -13,7 +13,26 @@ and next that automatically resets. This means that the flags must be
 set for every block to be processed.
 
 
+## FPGA-results ##
+
+### Xilinx FPGAs ###
+Implementation results using ISE 14.7.
+
+*** Spartan-6 ***
+- xc6slx45-3csg324
+- 4333 LUTs
+- 1300 Slices
+- 3853 regs
+- 57 MHz
+
+
 ## Status ##
+
+***(2014-11-07)***
+
+Added results for Xilinx Spartan-6.
+
+
 ***(2014-04-05)***
 
 RTL for the core and top is completed Testbenches for core and top
