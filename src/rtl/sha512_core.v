@@ -494,29 +494,29 @@ module sha512_core(
   //----------------------------------------------------------------
   always @*
     begin : sha512_ctrl_fsm
-      digest_init      = 0;
-      digest_update    = 0;
+      digest_init         = 0;
+      digest_update       = 0;
 
-      state_init       = 0;
-      state_update     = 0;
+      state_init          = 0;
+      state_update        = 0;
 
-      first_block      = 0;
-      ready_flag       = 0;
+      first_block         = 0;
+      ready_flag          = 0;
 
-      w_init           = 0;
-      w_next           = 0;
+      w_init              = 0;
+      w_next              = 0;
 
-      t_ctr_inc        = 0;
-      t_ctr_rst        = 0;
+      t_ctr_inc           = 0;
+      t_ctr_rst           = 0;
 
-      digest_valid_new = 0;
-      digest_valid_we  = 0;
+      digest_valid_new    = 0;
+      digest_valid_we     = 0;
 
       work_factor_ctr_rst = 0;
       work_factor_ctr_inc = 0;
 
-      sha512_ctrl_new  = CTRL_IDLE;
-      sha512_ctrl_we   = 0;
+      sha512_ctrl_new     = CTRL_IDLE;
+      sha512_ctrl_we      = 0;
 
 
       case (sha512_ctrl_reg)
@@ -526,26 +526,28 @@ module sha512_core(
 
             if (init)
               begin
-                digest_init      = 1;
-                w_init           = 1;
-                state_init       = 1;
-                first_block      = 1;
-                t_ctr_rst        = 1;
-                digest_valid_new = 0;
-                digest_valid_we  = 1;
-                sha512_ctrl_new  = CTRL_ROUNDS;
-                sha512_ctrl_we   = 1;
+                work_factor_ctr_rst = 1;
+                digest_init         = 1;
+                w_init              = 1;
+                state_init          = 1;
+                first_block         = 1;
+                t_ctr_rst           = 1;
+                digest_valid_new    = 0;
+                digest_valid_we     = 1;
+                sha512_ctrl_new     = CTRL_ROUNDS;
+                sha512_ctrl_we      = 1;
               end
 
             if (next)
               begin
-                w_init           = 1;
-                state_init       = 1;
-                t_ctr_rst        = 1;
-                digest_valid_new = 0;
-                digest_valid_we  = 1;
-                sha512_ctrl_new  = CTRL_ROUNDS;
-                sha512_ctrl_we   = 1;
+                work_factor_ctr_rst = 1;
+                w_init              = 1;
+                state_init          = 1;
+                t_ctr_rst           = 1;
+                digest_valid_new    = 0;
+                digest_valid_we     = 1;
+                sha512_ctrl_new     = CTRL_ROUNDS;
+                sha512_ctrl_we      = 1;
               end
           end
 
@@ -566,12 +568,34 @@ module sha512_core(
 
         CTRL_DONE:
           begin
-            digest_update    = 1;
-            digest_valid_new = 1;
-            digest_valid_we  = 1;
-
-            sha512_ctrl_new  = CTRL_IDLE;
-            sha512_ctrl_we   = 1;
+            if (work_factor)
+              begin
+                if (!work_factor_ctr_done)
+                  begin
+                    work_factor_ctr_inc = 1;
+                    w_init              = 1;
+                    state_init          = 1;
+                    t_ctr_rst           = 1;
+                    sha512_ctrl_new     = CTRL_ROUNDS;
+                    sha512_ctrl_we      = 1;
+                  end
+                else
+                  begin
+                    digest_update    = 1;
+                    digest_valid_new = 1;
+                    digest_valid_we  = 1;
+                    sha512_ctrl_new  = CTRL_IDLE;
+                    sha512_ctrl_we   = 1;
+                  end
+              end
+            else
+              begin
+                digest_update    = 1;
+                digest_valid_new = 1;
+                digest_valid_we  = 1;
+                sha512_ctrl_new  = CTRL_IDLE;
+                sha512_ctrl_we   = 1;
+              end
           end
       endcase // case (sha512_ctrl_reg)
     end // sha512_ctrl_fsm
