@@ -8,30 +8,30 @@
 // Author: Joachim Strombergson
 // Copyright (c) 2013, Secworks Sweden AB
 // All rights reserved.
-// 
-// Redistribution and use in source and binary forms, with or 
-// without modification, are permitted provided that the following 
-// conditions are met: 
-// 
-// 1. Redistributions of source code must retain the above copyright 
-//    notice, this list of conditions and the following disclaimer. 
-// 
-// 2. Redistributions in binary form must reproduce the above copyright 
-//    notice, this list of conditions and the following disclaimer in 
-//    the documentation and/or other materials provided with the 
-//    distribution. 
-// 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-// COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+//
+// Redistribution and use in source and binary forms, with or
+// without modification, are permitted provided that the following
+// conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright
+//    notice, this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in
+//    the documentation and/or other materials provided with the
+//    distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+// COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
 // BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 // ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //======================================================================
@@ -46,7 +46,7 @@
 // Test module.
 //------------------------------------------------------------------
 module tb_sha512();
-  
+
   //----------------------------------------------------------------
   // Internal constant and parameter definitions.
   //----------------------------------------------------------------
@@ -55,7 +55,7 @@ module tb_sha512();
   parameter CLK_PERIOD      = 2;
   parameter CLK_HALF_PERIOD = CLK_PERIOD / 2;
 
-  
+
   // The address map.
   parameter ADDR_NAME0         = 8'h00;
   parameter ADDR_NAME1         = 8'h01;
@@ -66,13 +66,13 @@ module tb_sha512();
   parameter CTRL_NEXT_BIT      = 1;
   parameter CTRL_MODE_LOW_BIT  = 2;
   parameter CTRL_MODE_HIGH_BIT = 3;
-  parameter CTRL_INIT_VALUE    = 2'h01;
-  parameter CTRL_NEXT_VALUE    = 2'h02;
+  parameter CTRL_INIT_VALUE    = 2'h1;
+  parameter CTRL_NEXT_VALUE    = 2'h2;
 
   parameter ADDR_STATUS        = 8'h09;
   parameter STATUS_READY_BIT   = 0;
   parameter STATUS_VALID_BIT   = 1;
-                             
+
   parameter ADDR_BLOCK0        = 8'h10;
   parameter ADDR_BLOCK1        = 8'h11;
   parameter ADDR_BLOCK2        = 8'h12;
@@ -105,7 +105,7 @@ module tb_sha512();
   parameter ADDR_BLOCK29       = 8'h2d;
   parameter ADDR_BLOCK30       = 8'h2e;
   parameter ADDR_BLOCK31       = 8'h2f;
-                             
+
   parameter ADDR_DIGEST0       = 8'h40;
   parameter ADDR_DIGEST1       = 8'h41;
   parameter ADDR_DIGEST2       = 8'h42;
@@ -129,7 +129,7 @@ module tb_sha512();
   parameter MODE_SHA_384     = 2;
   parameter MODE_SHA_512     = 3;
 
-  
+
   //----------------------------------------------------------------
   // Register and Wire declarations.
   //----------------------------------------------------------------
@@ -148,36 +148,36 @@ module tb_sha512();
 
   reg [31 : 0]  read_data;
   reg [511 : 0] digest_data;
-  
-  
+
+
   //----------------------------------------------------------------
   // Device Under Test.
   //----------------------------------------------------------------
   sha512 dut(
              .clk(tb_clk),
              .reset_n(tb_reset_n),
-             
+
              .cs(tb_cs),
              .we(tb_we),
-             
-             
+
+
              .address(tb_address),
              .write_data(tb_write_data),
              .read_data(tb_read_data),
              .error(tb_error)
             );
-  
+
 
   //----------------------------------------------------------------
   // clk_gen
   //
-  // Clock generator process. 
+  // Clock generator process.
   //----------------------------------------------------------------
-  always 
+  always
     begin : clk_gen
       #CLK_HALF_PERIOD tb_clk = !tb_clk;
     end // clk_gen
-    
+
 
   //----------------------------------------------------------------
   // sys_monitor
@@ -191,7 +191,7 @@ module tb_sha512();
       cycle_ctr = cycle_ctr + 1;
     end
 
-  
+
   //----------------------------------------------------------------
   // dump_dut_state()
   //
@@ -202,20 +202,20 @@ module tb_sha512();
       $display("State of DUT");
       $display("------------");
       $display("Inputs and outputs:");
-      $display("cs = 0x%01x, we = 0x%01x", 
+      $display("cs = 0x%01x, we = 0x%01x",
                dut.cs, dut.we);
       $display("address = 0x%02x", dut.address);
-      $display("write_data = 0x%08x, read_data = 0x%08x", 
+      $display("write_data = 0x%08x, read_data = 0x%08x",
                dut.write_data, dut.read_data);
       $display("tmp_read_data = 0x%08x", dut.tmp_read_data);
       $display("");
 
       $display("Control and status:");
-      $display("ctrl = 0x%02x, status = 0x%02x", 
-               {dut.next_reg, dut.init_reg}, 
+      $display("ctrl = 0x%02x, status = 0x%02x",
+               {dut.next_reg, dut.init_reg},
                {dut.digest_valid_reg, dut.ready_reg});
       $display("");
-      
+
       $display("Message block:");
       $display("block0  = 0x%08x, block1  = 0x%08x, block2  = 0x%08x,  block3  = 0x%08x",
                dut.block0_reg, dut.block1_reg, dut.block2_reg, dut.block3_reg);
@@ -238,15 +238,15 @@ module tb_sha512();
                dut.block28_reg, dut.block29_reg, dut.block30_reg, dut.block31_reg);
 
       $display("");
-      
+
       $display("Digest:");
       $display("digest = 0x%0128x", dut.digest_reg);
       $display("");
-      
+
     end
   endtask // dump_dut_state
-  
-  
+
+
   //----------------------------------------------------------------
   // reset_dut()
   //
@@ -263,7 +263,7 @@ module tb_sha512();
     end
   endtask // reset_dut
 
-  
+
   //----------------------------------------------------------------
   // init_sim()
   //
@@ -275,7 +275,7 @@ module tb_sha512();
       cycle_ctr = 32'h00000000;
       error_ctr = 32'h00000000;
       tc_ctr    = 32'h00000000;
-      
+
       tb_clk        = 0;
       tb_reset_n    = 0;
       tb_cs         = 0;
@@ -285,7 +285,7 @@ module tb_sha512();
     end
   endtask // init_dut
 
-  
+
   //----------------------------------------------------------------
   // display_test_result()
   //
@@ -304,8 +304,8 @@ module tb_sha512();
         end
     end
   endtask // display_test_result
-  
-  
+
+
   //----------------------------------------------------------------
   // wait_ready()
   //
@@ -319,14 +319,14 @@ module tb_sha512();
   task wait_ready();
     begin
       read_data = 0;
-      
+
       while (read_data == 0)
         begin
           read_word(ADDR_STATUS);
         end
     end
   endtask // wait_ready
-  
+
 
   //----------------------------------------------------------------
   // write_word()
@@ -341,7 +341,7 @@ module tb_sha512();
           $display("*** Writing 0x%08x to 0x%02x.", word, address);
           $display("");
         end
-         
+
       tb_address = address;
       tb_write_data = word;
       tb_cs = 1;
@@ -394,7 +394,7 @@ module tb_sha512();
       write_word(ADDR_BLOCK31, block[31   :   0]);
     end
   endtask // write_block
-  
+
 
   //----------------------------------------------------------------
   // read_word()
@@ -420,7 +420,7 @@ module tb_sha512();
     end
   endtask // read_word
 
-  
+
   //----------------------------------------------------------------
   // check_name_version()
   //
@@ -491,7 +491,7 @@ module tb_sha512();
       digest_data[31  :   0] = read_data;
     end
   endtask // read_digest
-  
+
 
   //----------------------------------------------------------------
   // get_mask()
@@ -583,12 +583,12 @@ module tb_sha512();
           $display("TC%01d: Got:      0x%0128x", tc_ctr, masked_data);
           error_ctr = error_ctr + 1;
         end
-      $display("*** TC%01d - Single block test done.", tc_ctr); 
+      $display("*** TC%01d - Single block test done.", tc_ctr);
       tc_ctr = tc_ctr + 1;
     end
   endtask // single_block_test
-    
-  
+
+
   //----------------------------------------------------------------
   // double_block_test()
   //
@@ -607,7 +607,7 @@ module tb_sha512();
     reg [511 : 0] masked_data1;
 
     begin
-      $display("*** TC%01d - Double block test started.", tc_ctr); 
+      $display("*** TC%01d - Double block test started.", tc_ctr);
 
       // First block
       write_block(block0);
@@ -634,7 +634,7 @@ module tb_sha512();
       #(CLK_PERIOD);
       wait_ready();
       read_digest();
-      
+
       mask = get_mask(mode);
       masked_data1 = digest_data & mask;
 
@@ -650,15 +650,15 @@ module tb_sha512();
           error_ctr = error_ctr + 1;
         end
 
-      $display("*** TC%01d - Double block test done.", tc_ctr); 
+      $display("*** TC%01d - Double block test done.", tc_ctr);
       tc_ctr = tc_ctr + 1;
     end
   endtask // double_block_test
 
-    
+
   //----------------------------------------------------------------
   // sha512_test
-  // The main test functionality. 
+  // The main test functionality.
   //
   // Test cases taken from:
   // http://csrc.nist.gov/groups/ST/toolkit/documents/Examples/SHA_All.pdf
@@ -670,7 +670,7 @@ module tb_sha512();
       reg [511 : 0]  tc2_expected;
       reg [511 : 0]  tc3_expected;
       reg [511 : 0]  tc4_expected;
-      
+
       reg [1024 : 0] double_block_one;
       reg [1024 : 0] double_block_two;
       reg [511 : 0]  tc5_expected;
@@ -681,7 +681,7 @@ module tb_sha512();
       reg [511 : 0]  tc10_expected;
       reg [511 : 0]  tc11_expected;
       reg [511 : 0]  tc12_expected;
-      
+
       $display("   -- Testbench for sha512 started --");
 
       init_sim();
@@ -700,7 +700,7 @@ module tb_sha512();
       // SHA-512 single block digest and test.
       tc1_expected = 512'hDDAF35A193617ABACC417349AE20413112E6FA4E89A97EA20A9EEEE64B55D39A2192992A274FC1A836BA3C23A3FEEBBD454D4423643CE80E2A9AC94FA54CA49F;
       single_block_test(8'h01, MODE_SHA_512, single_block, tc1_expected);
-      
+
       // SHA-512_224 single block digest and test.
       tc2_expected = {224'h4634270F707B6A54DAAE7530460842E20E37ED265CEEE9A43E8924AA, {9{32'h00000000}}};
       single_block_test(8'h02, MODE_SHA_512_224, single_block, tc2_expected);
@@ -739,9 +739,9 @@ module tb_sha512();
       double_block_test(8'h08, MODE_SHA_384, double_block_one, double_block_two, tc11_expected, tc12_expected);
 
       dump_dut_state();
-      
+
       display_test_result();
-      
+
       $display("   -- Testbench for sha512 done. --");
       $finish;
     end // sha512_test

@@ -839,7 +839,7 @@ module sha512(
 
                 ADDR_CTRL:
                   begin
-                    tmp_read_data = {24'h0000000, work_factor_reg, 3'b000,
+                    tmp_read_data = {24'h000000, work_factor_reg, 3'b000,
                                      mode_reg, next_reg, init_reg};
                   end
 
