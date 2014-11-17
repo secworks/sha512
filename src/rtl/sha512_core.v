@@ -111,6 +111,13 @@ module sha512_core(
   reg         t_ctr_inc;
   reg         t_ctr_rst;
 
+  reg [31 : 0] work_factor_ctr_reg;
+  reg [31 : 0] work_factor_ctr_new;
+  reg          work_factor_ctr_rst;
+  reg          work_factor_ctr_inc;
+  reg          work_factor_ctr_done;
+  reg          work_factor_ctr_we;
+
   reg digest_valid_reg;
   reg digest_valid_new;
   reg digest_valid_we;
@@ -208,25 +215,26 @@ module sha512_core(
     begin : reg_update
       if (!reset_n)
         begin
-          a_reg            <= 64'h00000000;
-          b_reg            <= 64'h00000000;
-          c_reg            <= 64'h00000000;
-          d_reg            <= 64'h00000000;
-          e_reg            <= 64'h00000000;
-          f_reg            <= 64'h00000000;
-          g_reg            <= 64'h00000000;
-          h_reg            <= 64'h00000000;
-          H0_reg           <= 64'h00000000;
-          H1_reg           <= 64'h00000000;
-          H2_reg           <= 64'h00000000;
-          H3_reg           <= 64'h00000000;
-          H4_reg           <= 64'h00000000;
-          H5_reg           <= 64'h00000000;
-          H6_reg           <= 64'h00000000;
-          H7_reg           <= 64'h00000000;
-          digest_valid_reg <= 0;
-          t_ctr_reg        <= 7'h00;
-          sha512_ctrl_reg  <= CTRL_IDLE;
+          a_reg               <= 64'h0000000000000000;
+          b_reg               <= 64'h0000000000000000;
+          c_reg               <= 64'h0000000000000000;
+          d_reg               <= 64'h0000000000000000;
+          e_reg               <= 64'h0000000000000000;
+          f_reg               <= 64'h0000000000000000;
+          g_reg               <= 64'h0000000000000000;
+          h_reg               <= 64'h0000000000000000;
+          H0_reg              <= 64'h0000000000000000;
+          H1_reg              <= 64'h0000000000000000;
+          H2_reg              <= 64'h0000000000000000;
+          H3_reg              <= 64'h0000000000000000;
+          H4_reg              <= 64'h0000000000000000;
+          H5_reg              <= 64'h0000000000000000;
+          H6_reg              <= 64'h0000000000000000;
+          H7_reg              <= 64'h0000000000000000;
+          work_factor_ctr_reg <= 32'h0000000000000000;
+          digest_valid_reg    <= 0;
+          t_ctr_reg           <= 7'h00;
+          sha512_ctrl_reg     <= CTRL_IDLE;
         end
       else
         begin
@@ -258,6 +266,11 @@ module sha512_core(
           if (t_ctr_we)
             begin
               t_ctr_reg <= t_ctr_new;
+            end
+
+          if (work_factor_ctr_we)
+            begin
+              work_factor_ctr_reg <= work_factor_ctr_new;
             end
 
           if (digest_valid_we)
@@ -445,6 +458,36 @@ module sha512_core(
 
 
   //----------------------------------------------------------------
+  // work_factor_ctr
+  //
+  // Work factor counter logic.
+  //----------------------------------------------------------------
+  always @*
+    begin : work_factor_ctr
+      work_factor_ctr_new  = 32'h00000000;
+      work_factor_ctr_we   = 0;
+      work_factor_ctr_done = 0;
+
+      if (work_factor_ctr_reg == work_factor_num)
+        begin
+          work_factor_ctr_done = 1;
+        end
+
+      if (work_factor_ctr_rst)
+        begin
+          work_factor_ctr_new  = 32'h00000000;
+          work_factor_ctr_we   = 1;
+        end
+
+      if (t_ctr_inc)
+        begin
+          work_factor_ctr_new  = work_factor_ctr_reg + 1'b1;
+          work_factor_ctr_we   = 1;
+        end
+    end // work_factor_ctr
+
+
+  //----------------------------------------------------------------
   // sha512_ctrl_fsm
   //
   // Logic for the state machine controlling the core behaviour.
@@ -468,6 +511,9 @@ module sha512_core(
 
       digest_valid_new = 0;
       digest_valid_we  = 0;
+
+      work_factor_ctr_rst = 0;
+      work_factor_ctr_inc = 0;
 
       sha512_ctrl_new  = CTRL_IDLE;
       sha512_ctrl_we   = 0;
