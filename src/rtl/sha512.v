@@ -9,30 +9,30 @@
 // Author: Joachim Strombergson
 // Copyright (c) 2014,  Secworks Sweden AB
 // All rights reserved.
-// 
-// Redistribution and use in source and binary forms, with or 
-// without modification, are permitted provided that the following 
-// conditions are met: 
-// 
-// 1. Redistributions of source code must retain the above copyright 
-//    notice, this list of conditions and the following disclaimer. 
-// 
-// 2. Redistributions in binary form must reproduce the above copyright 
-//    notice, this list of conditions and the following disclaimer in 
-//    the documentation and/or other materials provided with the 
-//    distribution. 
-// 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-// COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+//
+// Redistribution and use in source and binary forms, with or
+// without modification, are permitted provided that the following
+// conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright
+//    notice, this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+//    notice, this list of conditions and the following disclaimer in
+//    the documentation and/or other materials provided with the
+//    distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+// FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+// COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
 // BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
-// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+// STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 // ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //======================================================================
@@ -41,11 +41,11 @@ module sha512(
               // Clock and reset.
               input wire           clk,
               input wire           reset_n,
-              
+
               // Control.
               input wire           cs,
               input wire           we,
-              
+
               // Data ports.
               input wire  [7 : 0]  address,
               input wire  [31 : 0] write_data,
@@ -56,70 +56,73 @@ module sha512(
   //----------------------------------------------------------------
   // Internal constant and parameter definitions.
   //----------------------------------------------------------------
-  parameter ADDR_NAME0         = 8'h00;
-  parameter ADDR_NAME1         = 8'h01;
-  parameter ADDR_VERSION       = 8'h02;
-  
-  parameter ADDR_CTRL          = 8'h08;
-  parameter CTRL_INIT_BIT      = 0;
-  parameter CTRL_NEXT_BIT      = 1;
-  parameter CTRL_MODE_LOW_BIT  = 2;
-  parameter CTRL_MODE_HIGH_BIT = 3;
+  parameter ADDR_NAME0           = 8'h00;
+  parameter ADDR_NAME1           = 8'h01;
+  parameter ADDR_VERSION         = 8'h02;
 
-  parameter ADDR_STATUS        = 8'h09;
-  parameter STATUS_READY_BIT   = 0;
-  parameter STATUS_VALID_BIT   = 1;
-                             
-  parameter ADDR_BLOCK0        = 8'h10;
-  parameter ADDR_BLOCK1        = 8'h11;
-  parameter ADDR_BLOCK2        = 8'h12;
-  parameter ADDR_BLOCK3        = 8'h13;
-  parameter ADDR_BLOCK4        = 8'h14;
-  parameter ADDR_BLOCK5        = 8'h15;
-  parameter ADDR_BLOCK6        = 8'h16;
-  parameter ADDR_BLOCK7        = 8'h17;
-  parameter ADDR_BLOCK8        = 8'h18;
-  parameter ADDR_BLOCK9        = 8'h19;
-  parameter ADDR_BLOCK10       = 8'h1a;
-  parameter ADDR_BLOCK11       = 8'h1b;
-  parameter ADDR_BLOCK12       = 8'h1c;
-  parameter ADDR_BLOCK13       = 8'h1d;
-  parameter ADDR_BLOCK14       = 8'h1e;
-  parameter ADDR_BLOCK15       = 8'h1f;
-  parameter ADDR_BLOCK16       = 8'h20;
-  parameter ADDR_BLOCK17       = 8'h21;
-  parameter ADDR_BLOCK18       = 8'h22;
-  parameter ADDR_BLOCK19       = 8'h23;
-  parameter ADDR_BLOCK20       = 8'h24;
-  parameter ADDR_BLOCK21       = 8'h25;
-  parameter ADDR_BLOCK22       = 8'h26;
-  parameter ADDR_BLOCK23       = 8'h27;
-  parameter ADDR_BLOCK24       = 8'h28;
-  parameter ADDR_BLOCK25       = 8'h29;
-  parameter ADDR_BLOCK26       = 8'h2a;
-  parameter ADDR_BLOCK27       = 8'h2b;
-  parameter ADDR_BLOCK28       = 8'h2c;
-  parameter ADDR_BLOCK29       = 8'h2d;
-  parameter ADDR_BLOCK30       = 8'h2e;
-  parameter ADDR_BLOCK31       = 8'h2f;
-                             
-  parameter ADDR_DIGEST0       = 8'h40;
-  parameter ADDR_DIGEST1       = 8'h41;
-  parameter ADDR_DIGEST2       = 8'h42;
-  parameter ADDR_DIGEST3       = 8'h43;
-  parameter ADDR_DIGEST4       = 8'h44;
-  parameter ADDR_DIGEST5       = 8'h45;
-  parameter ADDR_DIGEST6       = 8'h46;
-  parameter ADDR_DIGEST7       = 8'h47;
-  parameter ADDR_DIGEST8       = 8'h48;
-  parameter ADDR_DIGEST9       = 8'h49;
-  parameter ADDR_DIGEST10      = 8'h4a;
-  parameter ADDR_DIGEST11      = 8'h4b;
-  parameter ADDR_DIGEST12      = 8'h4c;
-  parameter ADDR_DIGEST13      = 8'h4d;
-  parameter ADDR_DIGEST14      = 8'h4e;
-  parameter ADDR_DIGEST15      = 8'h4f;
-  
+  parameter ADDR_CTRL            = 8'h08;
+  parameter CTRL_INIT_BIT        = 0;
+  parameter CTRL_NEXT_BIT        = 1;
+  parameter CTRL_MODE_LOW_BIT    = 2;
+  parameter CTRL_MODE_HIGH_BIT   = 3;
+  parameter CTRL_WORK_FACTOR_BIT = 7;
+
+  parameter ADDR_STATUS          = 8'h09;
+  parameter STATUS_READY_BIT     = 0;
+  parameter STATUS_VALID_BIT     = 1;
+
+  parameter ADDR_WORK_FACTOR_NUM = 8'h0a;
+
+  parameter ADDR_BLOCK0          = 8'h10;
+  parameter ADDR_BLOCK1          = 8'h11;
+  parameter ADDR_BLOCK2          = 8'h12;
+  parameter ADDR_BLOCK3          = 8'h13;
+  parameter ADDR_BLOCK4          = 8'h14;
+  parameter ADDR_BLOCK5          = 8'h15;
+  parameter ADDR_BLOCK6          = 8'h16;
+  parameter ADDR_BLOCK7          = 8'h17;
+  parameter ADDR_BLOCK8          = 8'h18;
+  parameter ADDR_BLOCK9          = 8'h19;
+  parameter ADDR_BLOCK10         = 8'h1a;
+  parameter ADDR_BLOCK11         = 8'h1b;
+  parameter ADDR_BLOCK12         = 8'h1c;
+  parameter ADDR_BLOCK13         = 8'h1d;
+  parameter ADDR_BLOCK14         = 8'h1e;
+  parameter ADDR_BLOCK15         = 8'h1f;
+  parameter ADDR_BLOCK16         = 8'h20;
+  parameter ADDR_BLOCK17         = 8'h21;
+  parameter ADDR_BLOCK18         = 8'h22;
+  parameter ADDR_BLOCK19         = 8'h23;
+  parameter ADDR_BLOCK20         = 8'h24;
+  parameter ADDR_BLOCK21         = 8'h25;
+  parameter ADDR_BLOCK22         = 8'h26;
+  parameter ADDR_BLOCK23         = 8'h27;
+  parameter ADDR_BLOCK24         = 8'h28;
+  parameter ADDR_BLOCK25         = 8'h29;
+  parameter ADDR_BLOCK26         = 8'h2a;
+  parameter ADDR_BLOCK27         = 8'h2b;
+  parameter ADDR_BLOCK28         = 8'h2c;
+  parameter ADDR_BLOCK29         = 8'h2d;
+  parameter ADDR_BLOCK30         = 8'h2e;
+  parameter ADDR_BLOCK31         = 8'h2f;
+
+  parameter ADDR_DIGEST0         = 8'h40;
+  parameter ADDR_DIGEST1         = 8'h41;
+  parameter ADDR_DIGEST2         = 8'h42;
+  parameter ADDR_DIGEST3         = 8'h43;
+  parameter ADDR_DIGEST4         = 8'h44;
+  parameter ADDR_DIGEST5         = 8'h45;
+  parameter ADDR_DIGEST6         = 8'h46;
+  parameter ADDR_DIGEST7         = 8'h47;
+  parameter ADDR_DIGEST8         = 8'h48;
+  parameter ADDR_DIGEST9         = 8'h49;
+  parameter ADDR_DIGEST10        = 8'h4a;
+  parameter ADDR_DIGEST11        = 8'h4b;
+  parameter ADDR_DIGEST12        = 8'h4c;
+  parameter ADDR_DIGEST13        = 8'h4d;
+  parameter ADDR_DIGEST14        = 8'h4e;
+  parameter ADDR_DIGEST15        = 8'h4f;
+
   parameter CORE_NAME0         = 32'h73686132; // "sha2"
   parameter CORE_NAME1         = 32'h2d353132; // "-512"
   parameter CORE_VERSION       = 32'h302e3830; // "0.80"
@@ -129,7 +132,9 @@ module sha512(
   parameter MODE_SHA_384       = 2'h2;
   parameter MODE_SHA_512       = 2'h3;
 
-  
+  parameter DEFAULT_WORK_FACTOR_NUM = 32'h00010000; // 65536
+
+
   //----------------------------------------------------------------
   // Registers including update variables and write enable.
   //----------------------------------------------------------------
@@ -143,10 +148,17 @@ module sha512(
   reg next_we;
   reg next_set;
 
+  reg work_factor_reg;
+  reg work_factor_new;
+  reg work_factor_we;
+
   reg [1 : 0] mode_reg;
   reg [1 : 0] mode_new;
   reg         mode_we;
-  
+
+  reg [31 : 0] work_factor_num_reg;
+  reg          work_factor_num_we;
+
   reg ready_reg;
 
   reg [31 : 0] block0_reg;
@@ -213,17 +225,19 @@ module sha512(
   reg          block30_we;
   reg [31 : 0] block31_reg;
   reg          block31_we;
-  
+
   reg [511 : 0] digest_reg;
   reg           digest_valid_reg;
 
-  
+
   //----------------------------------------------------------------
   // Wires.
   //----------------------------------------------------------------
   wire            core_init;
   wire            core_next;
   wire [1 : 0]    core_mode;
+  wire            core_work_factor;
+  wire [31 : 0]   core_work_factor_num;
   wire            core_ready;
   wire [1023 : 0] core_block;
   wire [511 : 0]  core_digest;
@@ -231,49 +245,55 @@ module sha512(
 
   reg [31 : 0] tmp_read_data;
   reg          tmp_error;
-  
-  
+
+
   //----------------------------------------------------------------
   // Concurrent connectivity for ports etc.
   //----------------------------------------------------------------
   assign core_init = init_reg;
-  
+
   assign core_next = next_reg;
-  
+
   assign core_mode = mode_reg;
-  
-  assign core_block = {block0_reg,  block1_reg,  block2_reg,  block3_reg,  block4_reg,  
-                       block5_reg,  block6_reg,  block7_reg,  block8_reg,  block9_reg,  
-                       block10_reg, block11_reg, block12_reg, block13_reg, block14_reg, 
+
+  assign core_work_factor = work_factor_reg;
+  assign core_work_factor_num = work_factor_num_reg;
+
+  assign core_block = {block0_reg,  block1_reg,  block2_reg,  block3_reg,  block4_reg,
+                       block5_reg,  block6_reg,  block7_reg,  block8_reg,  block9_reg,
+                       block10_reg, block11_reg, block12_reg, block13_reg, block14_reg,
                        block15_reg, block16_reg, block17_reg, block18_reg, block19_reg,
-                       block20_reg, block21_reg, block22_reg, block23_reg, block24_reg, 
+                       block20_reg, block21_reg, block22_reg, block23_reg, block24_reg,
                        block25_reg, block26_reg, block27_reg, block28_reg, block29_reg,
                        block30_reg, block31_reg};
 
   assign read_data = tmp_read_data;
   assign error     = tmp_error;
-  
-             
+
+
   //----------------------------------------------------------------
   // core instantiation.
   //----------------------------------------------------------------
   sha512_core core(
                    .clk(clk),
                    .reset_n(reset_n),
-                   
+
                    .init(core_init),
                    .next(core_next),
                    .mode(core_mode),
-                  
+
+                   .work_factor(core_work_factor),
+                   .work_factor_num(core_work_factor_num),
+
                    .block(core_block),
-                   
+
                    .ready(core_ready),
-                   
+
                    .digest(core_digest),
                    .digest_valid(core_digest_valid)
                   );
-  
-  
+
+
   //----------------------------------------------------------------
   // reg_update
   //
@@ -285,44 +305,46 @@ module sha512(
     begin
       if (!reset_n)
         begin
-          init_reg         <= 0;
-          next_reg         <= 0;
-          mode_reg         <= MODE_SHA_512;
-          ready_reg        <= 0;
-          digest_reg       <= {16{32'h00000000}};
-          digest_valid_reg <= 0;
-          block0_reg       <= 32'h00000000;
-          block1_reg       <= 32'h00000000;
-          block2_reg       <= 32'h00000000;
-          block3_reg       <= 32'h00000000;
-          block4_reg       <= 32'h00000000;
-          block5_reg       <= 32'h00000000;
-          block6_reg       <= 32'h00000000;
-          block7_reg       <= 32'h00000000;
-          block8_reg       <= 32'h00000000;
-          block9_reg       <= 32'h00000000;
-          block10_reg      <= 32'h00000000;
-          block11_reg      <= 32'h00000000;
-          block12_reg      <= 32'h00000000;
-          block13_reg      <= 32'h00000000;
-          block14_reg      <= 32'h00000000;
-          block15_reg      <= 32'h00000000;
-          block16_reg      <= 32'h00000000;
-          block17_reg      <= 32'h00000000;
-          block18_reg      <= 32'h00000000;
-          block19_reg      <= 32'h00000000;
-          block20_reg      <= 32'h00000000;
-          block21_reg      <= 32'h00000000;
-          block22_reg      <= 32'h00000000;
-          block23_reg      <= 32'h00000000;
-          block24_reg      <= 32'h00000000;
-          block25_reg      <= 32'h00000000;
-          block26_reg      <= 32'h00000000;
-          block27_reg      <= 32'h00000000;
-          block28_reg      <= 32'h00000000;
-          block29_reg      <= 32'h00000000;
-          block30_reg      <= 32'h00000000;
-          block31_reg      <= 32'h00000000;
+          init_reg            <= 0;
+          next_reg            <= 0;
+          mode_reg            <= MODE_SHA_512;
+          work_factor_reg     <= 0;
+          work_factor_num_reg <= DEFAULT_WORK_FACTOR_NUM;
+          ready_reg           <= 0;
+          digest_reg          <= {16{32'h00000000}};
+          digest_valid_reg    <= 0;
+          block0_reg          <= 32'h00000000;
+          block1_reg          <= 32'h00000000;
+          block2_reg          <= 32'h00000000;
+          block3_reg          <= 32'h00000000;
+          block4_reg          <= 32'h00000000;
+          block5_reg          <= 32'h00000000;
+          block6_reg          <= 32'h00000000;
+          block7_reg          <= 32'h00000000;
+          block8_reg          <= 32'h00000000;
+          block9_reg          <= 32'h00000000;
+          block10_reg         <= 32'h00000000;
+          block11_reg         <= 32'h00000000;
+          block12_reg         <= 32'h00000000;
+          block13_reg         <= 32'h00000000;
+          block14_reg         <= 32'h00000000;
+          block15_reg         <= 32'h00000000;
+          block16_reg         <= 32'h00000000;
+          block17_reg         <= 32'h00000000;
+          block18_reg         <= 32'h00000000;
+          block19_reg         <= 32'h00000000;
+          block20_reg         <= 32'h00000000;
+          block21_reg         <= 32'h00000000;
+          block22_reg         <= 32'h00000000;
+          block23_reg         <= 32'h00000000;
+          block24_reg         <= 32'h00000000;
+          block25_reg         <= 32'h00000000;
+          block26_reg         <= 32'h00000000;
+          block27_reg         <= 32'h00000000;
+          block28_reg         <= 32'h00000000;
+          block29_reg         <= 32'h00000000;
+          block30_reg         <= 32'h00000000;
+          block31_reg         <= 32'h00000000;
         end
       else
         begin
@@ -343,7 +365,17 @@ module sha512(
             begin
               mode_reg <= mode_new;
             end
-          
+
+          if (work_factor_we)
+            begin
+              work_factor_reg <= work_factor_new;
+            end
+
+          if (work_factor_num_we)
+            begin
+              work_factor_num_reg <= write_data;
+            end
+
           if (core_digest_valid)
             begin
               digest_reg <= core_digest;
@@ -551,50 +583,53 @@ module sha512(
   //----------------------------------------------------------------
   // api_logic
   //
-  // Implementation of the api logic. If cs is enabled will either 
+  // Implementation of the api logic. If cs is enabled will either
   // try to write to or read from the internal registers.
   //----------------------------------------------------------------
   always @*
     begin : api_logic
-      init_set      = 0;
-      next_set      = 0;
-      mode_new      = 2'b00;
-      mode_we       = 0;
-      block0_we     = 0;
-      block1_we     = 0;
-      block2_we     = 0;
-      block3_we     = 0;
-      block4_we     = 0;
-      block5_we     = 0;
-      block6_we     = 0;
-      block7_we     = 0;
-      block8_we     = 0;
-      block9_we     = 0;
-      block10_we    = 0;
-      block11_we    = 0;
-      block12_we    = 0;
-      block13_we    = 0;
-      block14_we    = 0;
-      block15_we    = 0;
-      block16_we    = 0;
-      block17_we    = 0;
-      block18_we    = 0;
-      block19_we    = 0;
-      block20_we    = 0;
-      block21_we    = 0;
-      block22_we    = 0;
-      block23_we    = 0;
-      block24_we    = 0;
-      block25_we    = 0;
-      block26_we    = 0;
-      block27_we    = 0;
-      block28_we    = 0;
-      block29_we    = 0;
-      block30_we    = 0;
-      block31_we    = 0;
-      tmp_read_data = 32'h00000000;
-      tmp_error     = 0;
-      
+      init_set           = 0;
+      next_set           = 0;
+      mode_new           = 2'b00;
+      mode_we            = 0;
+      work_factor_new    = 0;
+      work_factor_we     = 0;
+      work_factor_num_we = 0;
+      block0_we          = 0;
+      block1_we          = 0;
+      block2_we          = 0;
+      block3_we          = 0;
+      block4_we          = 0;
+      block5_we          = 0;
+      block6_we          = 0;
+      block7_we          = 0;
+      block8_we          = 0;
+      block9_we          = 0;
+      block10_we         = 0;
+      block11_we         = 0;
+      block12_we         = 0;
+      block13_we         = 0;
+      block14_we         = 0;
+      block15_we         = 0;
+      block16_we         = 0;
+      block17_we         = 0;
+      block18_we         = 0;
+      block19_we         = 0;
+      block20_we         = 0;
+      block21_we         = 0;
+      block22_we         = 0;
+      block23_we         = 0;
+      block24_we         = 0;
+      block25_we         = 0;
+      block26_we         = 0;
+      block27_we         = 0;
+      block28_we         = 0;
+      block29_we         = 0;
+      block30_we         = 0;
+      block31_we         = 0;
+      tmp_read_data      = 32'h00000000;
+      tmp_error          = 0;
+
       if (cs)
         begin
           if (we)
@@ -603,12 +638,19 @@ module sha512(
                 // Write operations.
                 ADDR_CTRL:
                   begin
-                    init_set = write_data[CTRL_INIT_BIT];
-                    next_set = write_data[CTRL_NEXT_BIT];
-                    mode_new = write_data[CTRL_MODE_HIGH_BIT : CTRL_MODE_LOW_BIT];
-                    mode_we  = 1;
+                    init_set        = write_data[CTRL_INIT_BIT];
+                    next_set        = write_data[CTRL_NEXT_BIT];
+                    mode_new        = write_data[CTRL_MODE_HIGH_BIT : CTRL_MODE_LOW_BIT];
+                    work_factor_new = write_data[CTRL_WORK_FACTOR_BIT];
+                    work_factor_we  = 1;
+                    mode_we         = 1;
                   end
-                
+
+                ADDR_WORK_FACTOR_NUM:
+                  begin
+                    work_factor_num_we = 1;
+                  end
+
                 ADDR_BLOCK0:
                   begin
                     block0_we = 1;
@@ -768,7 +810,7 @@ module sha512(
                   begin
                     block31_we = 1;
                   end
-                
+
                 default:
                   begin
                     tmp_error = 1;
@@ -789,7 +831,7 @@ module sha512(
                   begin
                     tmp_read_data = CORE_NAME1;
                   end
-                
+
                 ADDR_VERSION:
                   begin
                     tmp_read_data = CORE_VERSION;
@@ -797,14 +839,20 @@ module sha512(
 
                 ADDR_CTRL:
                   begin
-                    tmp_read_data = {28'h0000000, mode_reg, next_reg, init_reg};
+                    tmp_read_data = {24'h0000000, work_factor_reg, 3'b000,
+                                     mode_reg, next_reg, init_reg};
                   end
-                
+
                 ADDR_STATUS:
                   begin
                     tmp_read_data = {28'h0000000, 2'b00, digest_valid_reg, ready_reg};
                   end
-                
+
+                ADDR_WORK_FACTOR_NUM:
+                  begin
+                    tmp_read_data = work_factor_num_reg;
+                  end
+
                 ADDR_BLOCK0:
                   begin
                     tmp_read_data = block0_reg;
@@ -1004,7 +1052,7 @@ module sha512(
                   begin
                     tmp_read_data = digest_reg[287 : 256];
                   end
-                
+
                 ADDR_DIGEST8:
                   begin
                     tmp_read_data = digest_reg[255 : 224];
@@ -1044,7 +1092,7 @@ module sha512(
                   begin
                     tmp_read_data = digest_reg[31  :   0];
                   end
-                
+
                 default:
                   begin
                     tmp_error = 1;

@@ -45,6 +45,9 @@ module sha512_core(
                    input wire            next,
                    input wire [1 : 0]    mode,
 
+                   input wire            work_factor,
+                   input wire [31 : 0]   work_factor_num,
+
                    input wire [1023 : 0] block,
 
                    output wire           ready,
