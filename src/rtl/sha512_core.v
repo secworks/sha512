@@ -479,7 +479,7 @@ module sha512_core(
           work_factor_ctr_we   = 1;
         end
 
-      if (t_ctr_inc)
+      if (work_factor_ctr_ctr_inc)
         begin
           work_factor_ctr_new  = work_factor_ctr_reg + 1'b1;
           work_factor_ctr_we   = 1;
