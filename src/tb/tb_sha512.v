@@ -124,10 +124,13 @@ module tb_sha512();
   parameter ADDR_DIGEST14        = 8'h4e;
   parameter ADDR_DIGEST15        = 8'h4f;
 
-  parameter MODE_SHA_512_224 = 0;
-  parameter MODE_SHA_512_256 = 1;
-  parameter MODE_SHA_384     = 2;
-  parameter MODE_SHA_512     = 3;
+  parameter MODE_SHA_512_224     = 0;
+  parameter MODE_SHA_512_256     = 1;
+  parameter MODE_SHA_384         = 2;
+  parameter MODE_SHA_512         = 3;
+
+  parameter CTRL_INIT_VALUE      = 32'h00000001;
+  parameter CTRL_NEXT_VALUE      = 32'h00000002;
 
 
   //----------------------------------------------------------------
