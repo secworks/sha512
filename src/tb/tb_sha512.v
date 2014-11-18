@@ -666,6 +666,11 @@ module tb_sha512();
       $display("*** TC%01d - Work factor test started.", tc_ctr);
 
       // Read out work factor number.
+      read_word(ADDR_WORK_FACTOR_NUM);
+
+      // Trying to change the work factor number.
+      write_word(ADDR_WORK_FACTOR_NUM, 32'h00000003);
+      read_word(ADDR_WORK_FACTOR_NUM);
 
       tc_ctr = tc_ctr + 1;
     end
