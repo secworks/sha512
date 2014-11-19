@@ -129,8 +129,8 @@ module tb_sha512();
   parameter MODE_SHA_384         = 2;
   parameter MODE_SHA_512         = 3;
 
-  parameter CTRL_INIT_VALUE      = 32'h00000001;
-  parameter CTRL_NEXT_VALUE      = 32'h00000002;
+  parameter CTRL_INIT_VALUE      = 2'h1;
+  parameter CTRL_NEXT_VALUE      = 2'h2;
 
 
   //----------------------------------------------------------------
