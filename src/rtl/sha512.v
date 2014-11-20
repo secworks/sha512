@@ -132,7 +132,7 @@ module sha512(
   parameter MODE_SHA_384       = 2'h2;
   parameter MODE_SHA_512       = 2'h3;
 
-  parameter DEFAULT_WORK_FACTOR_NUM = 32'h00010000; // 65536
+  parameter DEFAULT_WORK_FACTOR_NUM = 32'h000f0000;
 
 
   //----------------------------------------------------------------
