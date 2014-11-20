@@ -560,8 +560,9 @@ module sha512_core(
 
             if (t_ctr_reg == SHA512_ROUNDS)
               begin
-                sha512_ctrl_new = CTRL_DONE;
-                sha512_ctrl_we  = 1;
+                work_factor_ctr_inc = 1;
+                sha512_ctrl_new     = CTRL_DONE;
+                sha512_ctrl_we      = 1;
               end
           end
 
@@ -572,7 +573,6 @@ module sha512_core(
               begin
                 if (!work_factor_ctr_done)
                   begin
-                    work_factor_ctr_inc = 1;
                     w_init              = 1;
                     state_init          = 1;
                     t_ctr_rst           = 1;
