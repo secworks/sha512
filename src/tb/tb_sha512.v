@@ -124,13 +124,14 @@ module tb_sha512();
   parameter ADDR_DIGEST14        = 8'h4e;
   parameter ADDR_DIGEST15        = 8'h4f;
 
-  parameter MODE_SHA_512_224     = 0;
-  parameter MODE_SHA_512_256     = 1;
-  parameter MODE_SHA_384         = 2;
-  parameter MODE_SHA_512         = 3;
+  parameter MODE_SHA_512_224     = 2'h0;
+  parameter MODE_SHA_512_256     = 2'h1;
+  parameter MODE_SHA_384         = 2'h2;
+  parameter MODE_SHA_512         = 2'h3;
 
-  parameter CTRL_INIT_VALUE      = 2'h1;
-  parameter CTRL_NEXT_VALUE      = 2'h2;
+  parameter CTRL_INIT_VALUE        = 2'h1;
+  parameter CTRL_NEXT_VALUE        = 2'h2;
+  parameter CTRL_WORK_FACTOR_VALUE = 1'h1;
 
 
   //----------------------------------------------------------------
@@ -608,6 +609,7 @@ module tb_sha512();
                         );
     reg [511 : 0] mask;
     reg [511 : 0] masked_data1;
+    reg [31 :  0] ctrl_cmd;
 
     begin
       $display("*** TC%01d - Double block test started.", tc_ctr);
@@ -665,6 +667,10 @@ module tb_sha512();
   // Perform test of the work factor function.
   //----------------------------------------------------------------
   task work_factor_test();
+    reg [1023 : 0] my_block;
+    reg [511 :  0] my_digest;
+    reg [31 : 0]   my_ctrl_cmd;
+
     begin
       $display("*** TC%01d - Work factor test started.", tc_ctr);
 
@@ -675,6 +681,19 @@ module tb_sha512();
       write_word(ADDR_WORK_FACTOR_NUM, 32'h00000003);
       read_word(ADDR_WORK_FACTOR_NUM);
 
+      // Set block to all zero
+      my_block = {16{64'h0000000000000000}};
+      write_block(my_block);
+
+      // Set init+ work factor. We use SHA-512 mode.
+      my_ctrl_cmd = 32'h00000000 + (CTRL_WORK_FACTOR_VALUE << 7) +
+                    (MODE_SHA_512 << 2) + CTRL_INIT_VALUE;
+      write_word(ADDR_CTRL, my_ctrl_cmd);
+      #(CLK_PERIOD);
+      wait_ready();
+      read_digest();
+
+      $display("*** TC%01d - Work factor test done.", tc_ctr);
       tc_ctr = tc_ctr + 1;
     end
   endtask // work_factor_test
