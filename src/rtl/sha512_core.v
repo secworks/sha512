@@ -215,25 +215,25 @@ module sha512_core(
     begin : reg_update
       if (!reset_n)
         begin
-          a_reg               <= 64'h0000000000000000;
-          b_reg               <= 64'h0000000000000000;
-          c_reg               <= 64'h0000000000000000;
-          d_reg               <= 64'h0000000000000000;
-          e_reg               <= 64'h0000000000000000;
-          f_reg               <= 64'h0000000000000000;
-          g_reg               <= 64'h0000000000000000;
-          h_reg               <= 64'h0000000000000000;
-          H0_reg              <= 64'h0000000000000000;
-          H1_reg              <= 64'h0000000000000000;
-          H2_reg              <= 64'h0000000000000000;
-          H3_reg              <= 64'h0000000000000000;
-          H4_reg              <= 64'h0000000000000000;
-          H5_reg              <= 64'h0000000000000000;
-          H6_reg              <= 64'h0000000000000000;
-          H7_reg              <= 64'h0000000000000000;
-          work_factor_ctr_reg <= 32'h00000000;
+          a_reg               <= 64'h0;
+          b_reg               <= 64'h0;
+          c_reg               <= 64'h0;
+          d_reg               <= 64'h0;
+          e_reg               <= 64'h0;
+          f_reg               <= 64'h0;
+          g_reg               <= 64'h0;
+          h_reg               <= 64'h0;
+          H0_reg              <= 64'h0;
+          H1_reg              <= 64'h0;
+          H2_reg              <= 64'h0;
+          H3_reg              <= 64'h0;
+          H4_reg              <= 64'h0;
+          H5_reg              <= 64'h0;
+          H6_reg              <= 64'h0;
+          H7_reg              <= 64'h0;
+          work_factor_ctr_reg <= 32'h0;
           digest_valid_reg    <= 0;
-          t_ctr_reg           <= 7'h00;
+          t_ctr_reg           <= 7'h0;
           sha512_ctrl_reg     <= CTRL_IDLE;
         end
       else
