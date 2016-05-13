@@ -634,6 +634,9 @@ module sha512(
 
           else
             begin
+              if ((address >= ADDR_DIGEST0) && (address <= ADDR_DIGEST15))
+                tmp_read_data = digest_reg[(15 - (address - ADDR_DIGEST0))*32 +: 32];
+
               case (address)
                 // Read operations.
                 ADDR_NAME0:
@@ -749,54 +752,6 @@ module sha512(
 
                 ADDR_BLOCK31:
                   tmp_read_data = block31_reg;
-
-                ADDR_DIGEST0:
-                  tmp_read_data = digest_reg[511 : 480];
-
-                ADDR_DIGEST1:
-                  tmp_read_data = digest_reg[479 : 448];
-
-                ADDR_DIGEST2:
-                  tmp_read_data = digest_reg[447 : 416];
-
-                ADDR_DIGEST3:
-                  tmp_read_data = digest_reg[415 : 384];
-
-                ADDR_DIGEST4:
-                  tmp_read_data = digest_reg[383 : 352];
-
-                ADDR_DIGEST5:
-                  tmp_read_data = digest_reg[351 : 320];
-
-                ADDR_DIGEST6:
-                  tmp_read_data = digest_reg[319 : 288];
-
-                ADDR_DIGEST7:
-                  tmp_read_data = digest_reg[287 : 256];
-
-                ADDR_DIGEST8:
-                  tmp_read_data = digest_reg[255 : 224];
-
-                ADDR_DIGEST9:
-                  tmp_read_data = digest_reg[223 : 192];
-
-                ADDR_DIGEST10:
-                  tmp_read_data = digest_reg[191 : 160];
-
-                ADDR_DIGEST11:
-                  tmp_read_data = digest_reg[159 : 128];
-
-                ADDR_DIGEST12:
-                  tmp_read_data = digest_reg[127 :  96];
-
-                ADDR_DIGEST13:
-                  tmp_read_data = digest_reg[95  :  64];
-
-                ADDR_DIGEST14:
-                  tmp_read_data = digest_reg[63  :  32];
-
-                ADDR_DIGEST15:
-                  tmp_read_data = digest_reg[31  :   0];
 
                 default:
                   begin
