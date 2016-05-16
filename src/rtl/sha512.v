@@ -204,7 +204,7 @@ module sha512(
           work_factor_reg     <= 0;
           work_factor_num_reg <= DEFAULT_WORK_FACTOR_NUM;
           ready_reg           <= 0;
-          digest_reg          <= {16{32'h0}};
+          digest_reg          <= 512'h0;
           digest_valid_reg    <= 0;
 
           for (i = 0 ; i < 32 ; i = i + 1)
@@ -306,7 +306,7 @@ module sha512(
                   tmp_read_data = {24'h0, work_factor_reg, 3'b0, mode_reg, next_reg, init_reg};
 
                 ADDR_STATUS:
-                  tmp_read_data = {28'h0, 2'b0, digest_valid_reg, ready_reg};
+                  tmp_read_data = {30'h0, digest_valid_reg, ready_reg};
 
                 ADDR_WORK_FACTOR_NUM:
                   tmp_read_data = work_factor_num_reg;
