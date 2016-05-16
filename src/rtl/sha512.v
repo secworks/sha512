@@ -74,53 +74,9 @@ module sha512(
   parameter ADDR_WORK_FACTOR_NUM = 8'h0a;
 
   parameter ADDR_BLOCK0          = 8'h10;
-  parameter ADDR_BLOCK1          = 8'h11;
-  parameter ADDR_BLOCK2          = 8'h12;
-  parameter ADDR_BLOCK3          = 8'h13;
-  parameter ADDR_BLOCK4          = 8'h14;
-  parameter ADDR_BLOCK5          = 8'h15;
-  parameter ADDR_BLOCK6          = 8'h16;
-  parameter ADDR_BLOCK7          = 8'h17;
-  parameter ADDR_BLOCK8          = 8'h18;
-  parameter ADDR_BLOCK9          = 8'h19;
-  parameter ADDR_BLOCK10         = 8'h1a;
-  parameter ADDR_BLOCK11         = 8'h1b;
-  parameter ADDR_BLOCK12         = 8'h1c;
-  parameter ADDR_BLOCK13         = 8'h1d;
-  parameter ADDR_BLOCK14         = 8'h1e;
-  parameter ADDR_BLOCK15         = 8'h1f;
-  parameter ADDR_BLOCK16         = 8'h20;
-  parameter ADDR_BLOCK17         = 8'h21;
-  parameter ADDR_BLOCK18         = 8'h22;
-  parameter ADDR_BLOCK19         = 8'h23;
-  parameter ADDR_BLOCK20         = 8'h24;
-  parameter ADDR_BLOCK21         = 8'h25;
-  parameter ADDR_BLOCK22         = 8'h26;
-  parameter ADDR_BLOCK23         = 8'h27;
-  parameter ADDR_BLOCK24         = 8'h28;
-  parameter ADDR_BLOCK25         = 8'h29;
-  parameter ADDR_BLOCK26         = 8'h2a;
-  parameter ADDR_BLOCK27         = 8'h2b;
-  parameter ADDR_BLOCK28         = 8'h2c;
-  parameter ADDR_BLOCK29         = 8'h2d;
-  parameter ADDR_BLOCK30         = 8'h2e;
   parameter ADDR_BLOCK31         = 8'h2f;
 
   parameter ADDR_DIGEST0         = 8'h40;
-  parameter ADDR_DIGEST1         = 8'h41;
-  parameter ADDR_DIGEST2         = 8'h42;
-  parameter ADDR_DIGEST3         = 8'h43;
-  parameter ADDR_DIGEST4         = 8'h44;
-  parameter ADDR_DIGEST5         = 8'h45;
-  parameter ADDR_DIGEST6         = 8'h46;
-  parameter ADDR_DIGEST7         = 8'h47;
-  parameter ADDR_DIGEST8         = 8'h48;
-  parameter ADDR_DIGEST9         = 8'h49;
-  parameter ADDR_DIGEST10        = 8'h4a;
-  parameter ADDR_DIGEST11        = 8'h4b;
-  parameter ADDR_DIGEST12        = 8'h4c;
-  parameter ADDR_DIGEST13        = 8'h4d;
-  parameter ADDR_DIGEST14        = 8'h4e;
   parameter ADDR_DIGEST15        = 8'h4f;
 
   parameter CORE_NAME0         = 32'h73686132; // "sha2"
@@ -144,6 +100,8 @@ module sha512(
   reg next_reg;
   reg next_new;
 
+  reg ready_reg;
+
   reg work_factor_reg;
   reg work_factor_new;
   reg work_factor_we;
@@ -154,8 +112,6 @@ module sha512(
 
   reg [31 : 0] work_factor_num_reg;
   reg          work_factor_num_we;
-
-  reg ready_reg;
 
   reg [31 : 0] block_reg [0 : 31];
   reg          block_we;
