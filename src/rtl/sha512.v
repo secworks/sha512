@@ -157,70 +157,8 @@ module sha512(
 
   reg ready_reg;
 
-  reg [31 : 0] block0_reg;
-  reg          block0_we;
-  reg [31 : 0] block1_reg;
-  reg          block1_we;
-  reg [31 : 0] block2_reg;
-  reg          block2_we;
-  reg [31 : 0] block3_reg;
-  reg          block3_we;
-  reg [31 : 0] block4_reg;
-  reg          block4_we;
-  reg [31 : 0] block5_reg;
-  reg          block5_we;
-  reg [31 : 0] block6_reg;
-  reg          block6_we;
-  reg [31 : 0] block7_reg;
-  reg          block7_we;
-  reg [31 : 0] block8_reg;
-  reg          block8_we;
-  reg [31 : 0] block9_reg;
-  reg          block9_we;
-  reg [31 : 0] block10_reg;
-  reg          block10_we;
-  reg [31 : 0] block11_reg;
-  reg          block11_we;
-  reg [31 : 0] block12_reg;
-  reg          block12_we;
-  reg [31 : 0] block13_reg;
-  reg          block13_we;
-  reg [31 : 0] block14_reg;
-  reg          block14_we;
-  reg [31 : 0] block15_reg;
-  reg          block15_we;
-  reg [31 : 0] block16_reg;
-  reg          block16_we;
-  reg [31 : 0] block17_reg;
-  reg          block17_we;
-  reg [31 : 0] block18_reg;
-  reg          block18_we;
-  reg [31 : 0] block19_reg;
-  reg          block19_we;
-  reg [31 : 0] block20_reg;
-  reg          block20_we;
-  reg [31 : 0] block21_reg;
-  reg          block21_we;
-  reg [31 : 0] block22_reg;
-  reg          block22_we;
-  reg [31 : 0] block23_reg;
-  reg          block23_we;
-  reg [31 : 0] block24_reg;
-  reg          block24_we;
-  reg [31 : 0] block25_reg;
-  reg          block25_we;
-  reg [31 : 0] block26_reg;
-  reg          block26_we;
-  reg [31 : 0] block27_reg;
-  reg          block27_we;
-  reg [31 : 0] block28_reg;
-  reg          block28_we;
-  reg [31 : 0] block29_reg;
-  reg          block29_we;
-  reg [31 : 0] block30_reg;
-  reg          block30_we;
-  reg [31 : 0] block31_reg;
-  reg          block31_we;
+  reg [31 : 0] block_reg [0 : 31];
+  reg          block_we;
 
   reg [511 : 0] digest_reg;
   reg           digest_valid_reg;
@@ -255,13 +193,14 @@ module sha512(
   assign core_work_factor = work_factor_reg;
   assign core_work_factor_num = work_factor_num_reg;
 
-  assign core_block = {block0_reg,  block1_reg,  block2_reg,  block3_reg,  block4_reg,
-                       block5_reg,  block6_reg,  block7_reg,  block8_reg,  block9_reg,
-                       block10_reg, block11_reg, block12_reg, block13_reg, block14_reg,
-                       block15_reg, block16_reg, block17_reg, block18_reg, block19_reg,
-                       block20_reg, block21_reg, block22_reg, block23_reg, block24_reg,
-                       block25_reg, block26_reg, block27_reg, block28_reg, block29_reg,
-                       block30_reg, block31_reg};
+  assign core_block = {block_reg[00], block_reg[01], block_reg[02], block_reg[03],
+                       block_reg[04], block_reg[05], block_reg[06], block_reg[07],
+                       block_reg[08], block_reg[09], block_reg[10], block_reg[11],
+                       block_reg[12], block_reg[13], block_reg[14], block_reg[15],
+                       block_reg[16], block_reg[17], block_reg[18], block_reg[19],
+                       block_reg[20], block_reg[21], block_reg[22], block_reg[23],
+                       block_reg[24], block_reg[25], block_reg[26], block_reg[27],
+                       block_reg[28], block_reg[29], block_reg[30], block_reg[31]};
 
   assign read_data = tmp_read_data;
   assign error     = tmp_error;
@@ -298,7 +237,9 @@ module sha512(
   // active low reset. All registers have write enable.
   //----------------------------------------------------------------
   always @ (posedge clk or negedge reset_n)
-    begin
+    begin : reg_update
+      integer i;
+
       if (!reset_n)
         begin
           init_reg            <= 0;
@@ -309,38 +250,9 @@ module sha512(
           ready_reg           <= 0;
           digest_reg          <= {16{32'h0}};
           digest_valid_reg    <= 0;
-          block0_reg          <= 32'h0;
-          block1_reg          <= 32'h0;
-          block2_reg          <= 32'h0;
-          block3_reg          <= 32'h0;
-          block4_reg          <= 32'h0;
-          block5_reg          <= 32'h0;
-          block6_reg          <= 32'h0;
-          block7_reg          <= 32'h0;
-          block8_reg          <= 32'h0;
-          block9_reg          <= 32'h0;
-          block10_reg         <= 32'h0;
-          block11_reg         <= 32'h0;
-          block12_reg         <= 32'h0;
-          block13_reg         <= 32'h0;
-          block14_reg         <= 32'h0;
-          block15_reg         <= 32'h0;
-          block16_reg         <= 32'h0;
-          block17_reg         <= 32'h0;
-          block18_reg         <= 32'h0;
-          block19_reg         <= 32'h0;
-          block20_reg         <= 32'h0;
-          block21_reg         <= 32'h0;
-          block22_reg         <= 32'h0;
-          block23_reg         <= 32'h0;
-          block24_reg         <= 32'h0;
-          block25_reg         <= 32'h0;
-          block26_reg         <= 32'h0;
-          block27_reg         <= 32'h0;
-          block28_reg         <= 32'h0;
-          block29_reg         <= 32'h0;
-          block30_reg         <= 32'h0;
-          block31_reg         <= 32'h0;
+
+          for (i = 0 ; i < 32 ; i = i + 1)
+            block_reg[i] <= 32'h0;
         end
       else
         begin
@@ -361,101 +273,8 @@ module sha512(
           if (core_digest_valid)
             digest_reg <= core_digest;
 
-          if (block0_we)
-            block0_reg <= write_data;
-
-          if (block1_we)
-            block1_reg <= write_data;
-
-          if (block2_we)
-            block2_reg <= write_data;
-
-          if (block3_we)
-            block3_reg <= write_data;
-
-          if (block4_we)
-            block4_reg <= write_data;
-
-          if (block5_we)
-            block5_reg <= write_data;
-
-          if (block6_we)
-            block6_reg <= write_data;
-
-          if (block7_we)
-            block7_reg <= write_data;
-
-          if (block8_we)
-            block8_reg <= write_data;
-
-          if (block9_we)
-            block9_reg <= write_data;
-
-          if (block10_we)
-            block10_reg <= write_data;
-
-          if (block11_we)
-            block11_reg <= write_data;
-
-          if (block12_we)
-            block12_reg <= write_data;
-
-          if (block13_we)
-            block13_reg <= write_data;
-
-          if (block14_we)
-            block14_reg <= write_data;
-
-          if (block15_we)
-            block15_reg <= write_data;
-
-          if (block16_we)
-            block16_reg <= write_data;
-
-          if (block17_we)
-            block17_reg <= write_data;
-
-          if (block18_we)
-            block18_reg <= write_data;
-
-          if (block19_we)
-            block19_reg <= write_data;
-
-          if (block20_we)
-            block20_reg <= write_data;
-
-          if (block21_we)
-            block21_reg <= write_data;
-
-          if (block22_we)
-            block22_reg <= write_data;
-
-          if (block23_we)
-            block23_reg <= write_data;
-
-          if (block24_we)
-            block24_reg <= write_data;
-
-          if (block25_we)
-            block25_reg <= write_data;
-
-          if (block26_we)
-            block26_reg <= write_data;
-
-          if (block27_we)
-            block27_reg <= write_data;
-
-          if (block28_we)
-            block28_reg <= write_data;
-
-          if (block29_we)
-            block29_reg <= write_data;
-
-          if (block30_we)
-            block30_reg <= write_data;
-
-          if (block31_we)
-            block31_reg <= write_data;
+          if (block_we)
+            block_reg[(address - ADDR_BLOCK0)] <= write_data;
         end
     end // reg_update
 
@@ -475,38 +294,7 @@ module sha512(
       work_factor_new    = 0;
       work_factor_we     = 0;
       work_factor_num_we = 0;
-      block0_we          = 0;
-      block1_we          = 0;
-      block2_we          = 0;
-      block3_we          = 0;
-      block4_we          = 0;
-      block5_we          = 0;
-      block6_we          = 0;
-      block7_we          = 0;
-      block8_we          = 0;
-      block9_we          = 0;
-      block10_we         = 0;
-      block11_we         = 0;
-      block12_we         = 0;
-      block13_we         = 0;
-      block14_we         = 0;
-      block15_we         = 0;
-      block16_we         = 0;
-      block17_we         = 0;
-      block18_we         = 0;
-      block19_we         = 0;
-      block20_we         = 0;
-      block21_we         = 0;
-      block22_we         = 0;
-      block23_we         = 0;
-      block24_we         = 0;
-      block25_we         = 0;
-      block26_we         = 0;
-      block27_we         = 0;
-      block28_we         = 0;
-      block29_we         = 0;
-      block30_we         = 0;
-      block31_we         = 0;
+      block_we           = 0;
       tmp_read_data      = 32'h0;
       tmp_error          = 0;
 
@@ -514,6 +302,9 @@ module sha512(
         begin
           if (we)
             begin
+              if ((address >= ADDR_BLOCK0) && (address <= ADDR_BLOCK31))
+                block_we = 1;
+
               case (address)
                 // Write operations.
                 ADDR_CTRL:
@@ -529,102 +320,6 @@ module sha512(
                 ADDR_WORK_FACTOR_NUM:
                   work_factor_num_we = 1;
 
-                ADDR_BLOCK0:
-                  block0_we = 1;
-
-                ADDR_BLOCK1:
-                  block1_we = 1;
-
-                ADDR_BLOCK2:
-                  block2_we = 1;
-
-                ADDR_BLOCK3:
-                  block3_we = 1;
-
-                ADDR_BLOCK4:
-                  block4_we = 1;
-
-                ADDR_BLOCK5:
-                  block5_we = 1;
-
-                ADDR_BLOCK6:
-                  block6_we = 1;
-
-                ADDR_BLOCK7:
-                  block7_we = 1;
-
-                ADDR_BLOCK8:
-                  block8_we = 1;
-
-                ADDR_BLOCK9:
-                  block9_we = 1;
-
-                ADDR_BLOCK10:
-                  block10_we = 1;
-
-                ADDR_BLOCK11:
-                  block11_we = 1;
-
-                ADDR_BLOCK12:
-                  block12_we = 1;
-
-                ADDR_BLOCK13:
-                  block13_we = 1;
-
-                ADDR_BLOCK14:
-                  block14_we = 1;
-
-                ADDR_BLOCK15:
-                  block15_we = 1;
-
-                ADDR_BLOCK16:
-                  block16_we = 1;
-
-                ADDR_BLOCK17:
-                  block17_we = 1;
-
-                ADDR_BLOCK18:
-                  block18_we = 1;
-
-                ADDR_BLOCK19:
-                  block19_we = 1;
-
-                ADDR_BLOCK20:
-                  block20_we = 1;
-
-                ADDR_BLOCK21:
-                  block21_we = 1;
-
-                ADDR_BLOCK22:
-                  block22_we = 1;
-
-                ADDR_BLOCK23:
-                  block23_we = 1;
-
-                ADDR_BLOCK24:
-                  block24_we = 1;
-
-                ADDR_BLOCK25:
-                  block25_we = 1;
-
-                ADDR_BLOCK26:
-                  block26_we = 1;
-
-                ADDR_BLOCK27:
-                  block27_we = 1;
-
-                ADDR_BLOCK28:
-                  block28_we = 1;
-
-                ADDR_BLOCK29:
-                  block29_we = 1;
-
-                ADDR_BLOCK30:
-                  block30_we = 1;
-
-                ADDR_BLOCK31:
-                  block31_we = 1;
-
                 default:
                   begin
                     tmp_error = 1;
@@ -636,6 +331,9 @@ module sha512(
             begin
               if ((address >= ADDR_DIGEST0) && (address <= ADDR_DIGEST15))
                 tmp_read_data = digest_reg[(15 - (address - ADDR_DIGEST0))*32 +: 32];
+
+              if ((address >= ADDR_BLOCK0) && (address <= ADDR_BLOCK31))
+                tmp_read_data = block_reg[address[4 : 0]];
 
               case (address)
                 // Read operations.
@@ -656,102 +354,6 @@ module sha512(
 
                 ADDR_WORK_FACTOR_NUM:
                   tmp_read_data = work_factor_num_reg;
-
-                ADDR_BLOCK0:
-                  tmp_read_data = block0_reg;
-
-                ADDR_BLOCK1:
-                  tmp_read_data = block1_reg;
-
-                ADDR_BLOCK2:
-                  tmp_read_data = block2_reg;
-
-                ADDR_BLOCK3:
-                  tmp_read_data = block3_reg;
-
-                ADDR_BLOCK4:
-                  tmp_read_data = block4_reg;
-
-                ADDR_BLOCK5:
-                  tmp_read_data = block5_reg;
-
-                ADDR_BLOCK6:
-                  tmp_read_data = block6_reg;
-
-                ADDR_BLOCK7:
-                  tmp_read_data = block7_reg;
-
-                ADDR_BLOCK8:
-                  tmp_read_data = block8_reg;
-
-                ADDR_BLOCK9:
-                  tmp_read_data = block9_reg;
-
-                ADDR_BLOCK10:
-                  tmp_read_data = block10_reg;
-
-                ADDR_BLOCK11:
-                  tmp_read_data = block11_reg;
-
-                ADDR_BLOCK12:
-                  tmp_read_data = block12_reg;
-
-                ADDR_BLOCK13:
-                  tmp_read_data = block13_reg;
-
-                ADDR_BLOCK14:
-                  tmp_read_data = block14_reg;
-
-                ADDR_BLOCK15:
-                  tmp_read_data = block15_reg;
-
-                ADDR_BLOCK16:
-                  tmp_read_data = block16_reg;
-
-                ADDR_BLOCK17:
-                  tmp_read_data = block17_reg;
-
-                ADDR_BLOCK18:
-                  tmp_read_data = block18_reg;
-
-                ADDR_BLOCK19:
-                  tmp_read_data = block19_reg;
-
-                ADDR_BLOCK20:
-                  tmp_read_data = block20_reg;
-
-                ADDR_BLOCK21:
-                  tmp_read_data = block21_reg;
-
-                ADDR_BLOCK22:
-                  tmp_read_data = block22_reg;
-
-                ADDR_BLOCK23:
-                  tmp_read_data = block23_reg;
-
-                ADDR_BLOCK24:
-                  tmp_read_data = block24_reg;
-
-                ADDR_BLOCK25:
-                  tmp_read_data = block25_reg;
-
-                ADDR_BLOCK26:
-                  tmp_read_data = block26_reg;
-
-                ADDR_BLOCK27:
-                  tmp_read_data = block27_reg;
-
-                ADDR_BLOCK28:
-                  tmp_read_data = block28_reg;
-
-                ADDR_BLOCK29:
-                  tmp_read_data = block29_reg;
-
-                ADDR_BLOCK30:
-                  tmp_read_data = block30_reg;
-
-                ADDR_BLOCK31:
-                  tmp_read_data = block31_reg;
 
                 default:
                   begin

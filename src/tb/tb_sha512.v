@@ -222,24 +222,21 @@ module tb_sha512();
 
       $display("Message block:");
       $display("block0  = 0x%08x, block1  = 0x%08x, block2  = 0x%08x,  block3  = 0x%08x",
-               dut.block0_reg, dut.block1_reg, dut.block2_reg, dut.block3_reg);
+               dut.block_reg[00], dut.block_reg[01], dut.block_reg[02], dut.block_reg[03]);
       $display("block4  = 0x%08x, block5  = 0x%08x, block6  = 0x%08x,  block7  = 0x%08x",
-               dut.block4_reg, dut.block5_reg, dut.block6_reg, dut.block7_reg);
-
+               dut.block_reg[04], dut.block_reg[05], dut.block_reg[06], dut.block_reg[07]);
       $display("block8  = 0x%08x, block9  = 0x%08x, block10 = 0x%08x,  block11 = 0x%08x",
-               dut.block8_reg, dut.block9_reg, dut.block10_reg, dut.block11_reg);
+               dut.block_reg[08], dut.block_reg[09], dut.block_reg[10], dut.block_reg[11]);
       $display("block12 = 0x%08x, block13 = 0x%08x, block14 = 0x%08x,  block15 = 0x%08x",
-               dut.block12_reg, dut.block13_reg, dut.block14_reg, dut.block15_reg);
-
+               dut.block_reg[12], dut.block_reg[13], dut.block_reg[14], dut.block_reg[15]);
       $display("block16 = 0x%08x, block17 = 0x%08x, block18 = 0x%08x,  block19 = 0x%08x",
-               dut.block16_reg, dut.block17_reg, dut.block18_reg, dut.block19_reg);
+               dut.block_reg[16], dut.block_reg[17], dut.block_reg[18], dut.block_reg[19]);
       $display("block20 = 0x%08x, block21 = 0x%08x, block22 = 0x%08x,  block23 = 0x%08x",
-               dut.block20_reg, dut.block21_reg, dut.block22_reg, dut.block23_reg);
-
+               dut.block_reg[20], dut.block_reg[21], dut.block_reg[22], dut.block_reg[23]);
       $display("block24 = 0x%08x, block25 = 0x%08x, block26 = 0x%08x,  block27 = 0x%08x",
-               dut.block24_reg, dut.block25_reg, dut.block26_reg, dut.block27_reg);
+               dut.block_reg[24], dut.block_reg[25], dut.block_reg[26], dut.block_reg[27]);
       $display("block28 = 0x%08x, block29 = 0x%08x, block30 = 0x%08x,  block31 = 0x%08x",
-               dut.block28_reg, dut.block29_reg, dut.block30_reg, dut.block31_reg);
+               dut.block_reg[28], dut.block_reg[29], dut.block_reg[30], dut.block_reg[31]);
 
       $display("");
 
