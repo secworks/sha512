@@ -286,7 +286,7 @@ module sha512(
           else
             begin
               if ((address >= ADDR_DIGEST0) && (address <= ADDR_DIGEST15))
-                tmp_read_data = digest_reg[(15 - (address - ADDR_DIGEST0))*32 +: 32];
+                tmp_read_data = digest_reg[(15 - (address - ADDR_DIGEST0)) * 32 +: 32];
 
               if ((address >= ADDR_BLOCK0) && (address <= ADDR_BLOCK31))
                 tmp_read_data = block_reg[address[4 : 0]];
