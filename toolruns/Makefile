@@ -46,44 +46,42 @@ CC=iverilog
 LINT=verilator
 
 
-all: top core
+all: top.sim core.sim
 
 
-top: $(TOP_TB_SRC) $(TOP_SRC)
-	$(CC) -o top.sim $(TOP_TB_SRC) $(TOP_SRC) $(CORE_SRC)
+top.sim:	$(TOP_TB_SRC) $(TOP_SRC)
+		$(CC) -o top.sim $(TOP_TB_SRC) $(TOP_SRC) $(CORE_SRC)
 
 
-core: $(CORE_TB_SRC) $(CORE_SRC)
-	$(CC) -o core.sim $(CORE_SRC) $(CORE_TB_SRC)
+core.sim:	$(CORE_TB_SRC) $(CORE_SRC)
+		$(CC) -o core.sim $(CORE_SRC) $(CORE_TB_SRC)
 
 
-sim-top: top.sim
-	./top.sim
+sim-top: 	top.sim
+		./top.sim
 
 
-sim-core: core.sim
-	./core.sim
+sim-core: 	core.sim
+		./core.sim
 
 
-lint:	$(TOP_SRC) $(CORE_SRC)
-	verilator --lint-only -Wall -Wno-fatal -Wno-DECLFILENAME $(TOP_SRC) $(CORE_SRC)
+lint:		$(TOP_SRC) $(CORE_SRC)
+		verilator --lint-only -Wall -Wno-fatal -Wno-DECLFILENAME $(TOP_SRC) $(CORE_SRC)
 
 
 clean:
-	rm -f top.sim
-	rm -f core.sim
-	rm -f wmem.sim
-
+		rm -f top.sim
+		rm -f core.sim
 
 help:
-	@echo "Supported targets:"
-	@echo "------------------"
-	@echo "all:      Build all simulation targets."
-	@echo "top:      Build the top simulation target."
-	@echo "core:     Build the core simulation target."
-	@echo "sim-top:  Run top level simulation."
-	@echo "sim-core: Run core level simulation."
-	@echo "clean:    Delete all built files."
+		@echo "Supported targets:"
+		@echo "------------------"
+		@echo "all:      Build all simulation targets."
+		@echo "top:      Build the top simulation target."
+		@echo "core:     Build the core simulation target."
+		@echo "sim-top:  Run top level simulation."
+		@echo "sim-core: Run core level simulation."
+		@echo "clean:    Delete all built files."
 
 #===================================================================
 # EOF Makefile
