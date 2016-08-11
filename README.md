@@ -25,6 +25,7 @@ Implementation results using ISE 14.7.
 - 3918 regs
 - 96 MHz
 
+
 ***Spartan-6***
 - xc6slx45-3csg324
 - 4333 LUTs
@@ -33,7 +34,20 @@ Implementation results using ISE 14.7.
 - 57 MHz
 
 
+### Altera FPGAs ###
+
+***Altera Cyclone V GX***
+- 2923 ALMs
+- 3609 Registers
+- 80 MHz max clock frequency
+
+
 ## Status ##
+
+***(2016-08-10)***
+
+Added results for Xilinx Artix-7.
+
 
 ***(2014-11-07)***
 
