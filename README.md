@@ -18,6 +18,13 @@ set for every block to be processed.
 ### Xilinx FPGAs ###
 Implementation results using ISE 14.7.
 
+*** Artix-7 ***
+- xc7a200t-3fbg484
+- 4869 Slice LUTs
+- 1575 Slices
+- 3918 regs
+- 96 MHz
+
 *** Spartan-6 ***
 - xc6slx45-3csg324
 - 4333 LUTs
