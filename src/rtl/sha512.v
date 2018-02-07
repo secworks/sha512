@@ -132,6 +132,7 @@ module sha512(
   wire [1023 : 0] core_block;
   wire [511 : 0]  core_digest;
   wire            core_digest_valid;
+  reg [4 : 0]     block_addr;
 
   reg [31 : 0] tmp_read_data;
   reg          tmp_error;
@@ -230,7 +231,7 @@ module sha512(
             digest_reg <= core_digest;
 
           if (block_we)
-            block_reg[(address - ADDR_BLOCK0)] <= write_data;
+            block_reg[block_addr] <= write_data;
         end
     end // reg_update
 
@@ -253,6 +254,8 @@ module sha512(
       block_we           = 0;
       tmp_read_data      = 32'h0;
       tmp_error          = 0;
+
+      block_addr = address[4 : 0] - ADDR_BLOCK0[4 : 0];
 
       if (cs)
         begin
