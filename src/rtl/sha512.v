@@ -79,14 +79,14 @@ module sha512(
   parameter ADDR_DIGEST0         = 8'h40;
   parameter ADDR_DIGEST15        = 8'h4f;
 
-  parameter CORE_NAME0         = 32'h73686132; // "sha2"
-  parameter CORE_NAME1         = 32'h2d353132; // "-512"
-  parameter CORE_VERSION       = 32'h302e3830; // "0.80"
+  parameter CORE_NAME0           = 32'h73686132; // "sha2"
+  parameter CORE_NAME1           = 32'h2d353132; // "-512"
+  parameter CORE_VERSION         = 32'h302e3830; // "0.80"
 
-  parameter MODE_SHA_512_224   = 2'h0;
-  parameter MODE_SHA_512_256   = 2'h1;
-  parameter MODE_SHA_384       = 2'h2;
-  parameter MODE_SHA_512       = 2'h3;
+  parameter MODE_SHA_512_224     = 2'h0;
+  parameter MODE_SHA_512_256     = 2'h1;
+  parameter MODE_SHA_384         = 2'h2;
+  parameter MODE_SHA_512         = 2'h3;
 
   parameter DEFAULT_WORK_FACTOR_NUM = 32'h000f0000;
 
