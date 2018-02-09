@@ -68,6 +68,7 @@ module tb_sha512_core();
   reg            tb_init;
   reg            tb_next;
   reg    [1 : 0] tb_mode;
+
   reg [1023 : 0] tb_block;
   wire           tb_ready;
   wire [511 : 0] tb_digest;
@@ -84,6 +85,9 @@ module tb_sha512_core();
                    .init(tb_init),
                    .next(tb_next),
                    .mode(tb_mode),
+
+                   .work_factor(),
+                   .work_factor_num(),
 
                    .block(tb_block),
 
@@ -152,8 +156,8 @@ module tb_sha512_core();
                dut.digest_init, dut.digest_update);
       $display("state_init      = 0x%01x, state_update  = 0x%01x",
                dut.state_init, dut.state_update);
-      $display("first_block     = 0x%01x, ready_flag    = 0x%01x, w_init    = 0x%01x",
-               dut.first_block, dut.ready_flag, dut.w_init);
+      $display("first_block     = 0x%01x, ready_reg    = 0x%01x, w_init    = 0x%01x",
+               dut.first_block, dut.ready_reg, dut.w_init);
       $display("t_ctr_inc       = 0x%01x, t_ctr_rst     = 0x%01x, t_ctr_reg = 0x%02x",
                dut.t_ctr_inc, dut.t_ctr_rst, dut.t_ctr_reg);
       $display("");
@@ -238,6 +242,7 @@ module tb_sha512_core();
       tb_next = 0;
       tb_next = 2'b00;
       tb_mode = 2'b00;
+
       tb_block = {32{32'h00000000}};
     end
   endtask // init_dut
