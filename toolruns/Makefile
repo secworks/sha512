@@ -39,22 +39,25 @@
 CORE_SRC=../src/rtl/sha512_core.v ../src/rtl/sha512_h_constants.v ../src/rtl/sha512_k_constants.v ../src/rtl/sha512_w_mem.v
 CORE_TB_SRC=../src/tb/tb_sha512_core.v
 
-TOP_SRC=../src/rtl/sha512.v
+TOP_SRC=../src/rtl/sha512.v $(CORE_SRC)
 TOP_TB_SRC=../src/tb/tb_sha512.v
 
 CC=iverilog
+CC_FLAGS= -Wall
+
 LINT=verilator
+LINT_FLAGS = +1364-2001ext+ --lint-only -Wall -Wno-fatal -Wno-DECLFILENAME
 
 
 all: top.sim core.sim
 
 
 top.sim:	$(TOP_TB_SRC) $(TOP_SRC)
-		$(CC) -o top.sim $(TOP_TB_SRC) $(TOP_SRC) $(CORE_SRC)
+		$(CC) $(CC_FLAGS) -o top.sim $(TOP_TB_SRC) $(TOP_SRC)
 
 
 core.sim:	$(CORE_TB_SRC) $(CORE_SRC)
-		$(CC) -o core.sim $(CORE_SRC) $(CORE_TB_SRC)
+		$(CC) $(CC_FLAGS) -o core.sim $(CORE_SRC) $(CORE_TB_SRC)
 
 
 sim-top: 	top.sim
@@ -65,8 +68,8 @@ sim-core: 	core.sim
 		./core.sim
 
 
-lint:		$(TOP_SRC) $(CORE_SRC)
-		verilator --lint-only -Wall -Wno-fatal -Wno-DECLFILENAME $(TOP_SRC) $(CORE_SRC)
+lint: $(TOP_SRC)
+	$(LINT) $(LINT_FLAGS) $(TOP_SRC)
 
 
 clean:
