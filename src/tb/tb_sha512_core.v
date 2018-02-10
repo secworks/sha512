@@ -69,6 +69,9 @@ module tb_sha512_core();
   reg            tb_next;
   reg    [1 : 0] tb_mode;
 
+  reg            tb_work_factor;
+  reg   [31 : 0] tb_work_factor_num;
+
   reg [1023 : 0] tb_block;
   wire           tb_ready;
   wire [511 : 0] tb_digest;
@@ -86,8 +89,8 @@ module tb_sha512_core();
                    .next(tb_next),
                    .mode(tb_mode),
 
-                   .work_factor(),
-                   .work_factor_num(),
+                   .work_factor(tb_work_factor),
+                   .work_factor_num(tb_work_factor_num),
 
                    .block(tb_block),
 
@@ -242,7 +245,8 @@ module tb_sha512_core();
       tb_next = 0;
       tb_next = 2'b00;
       tb_mode = 2'b00;
-
+      tb_work_factor = 0;
+      tb_work_factor_num = 32'h0;
       tb_block = {32{32'h00000000}};
     end
   endtask // init_dut

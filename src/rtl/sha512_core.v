@@ -115,7 +115,6 @@ module sha512_core(
   reg [31 : 0] work_factor_ctr_new;
   reg          work_factor_ctr_rst;
   reg          work_factor_ctr_inc;
-  reg          work_factor_ctr_done;
   reg          work_factor_ctr_we;
 
   reg          ready_reg;
@@ -470,30 +469,19 @@ module sha512_core(
   //----------------------------------------------------------------
   always @*
     begin : work_factor_ctr
-      work_factor_ctr_new  = 32'h00000000;
+      work_factor_ctr_new  = 32'h0;
       work_factor_ctr_we   = 0;
-      work_factor_ctr_done = 0;
 
-      if (work_factor == 0)
-        work_factor_ctr_done = 1;
-      else
+      if (work_factor_ctr_rst)
         begin
-          if (work_factor_ctr_reg == work_factor_num)
-            begin
-              work_factor_ctr_done = 1;
-            end
+          work_factor_ctr_new = 32'h0;
+          work_factor_ctr_we  = 1;
+        end
 
-          if (work_factor_ctr_rst)
-            begin
-              work_factor_ctr_new = 32'h00000000;
-              work_factor_ctr_we  = 1;
-            end
-
-          if (work_factor_ctr_inc)
-            begin
-              work_factor_ctr_new = work_factor_ctr_reg + 1'b1;
-              work_factor_ctr_we  = 1;
-            end
+      if (work_factor_ctr_inc)
+        begin
+          work_factor_ctr_new = work_factor_ctr_reg + 1'b1;
+          work_factor_ctr_we  = 1;
         end
     end // work_factor_ctr
 
@@ -577,7 +565,7 @@ module sha512_core(
           begin
             if (work_factor)
               begin
-                if (!work_factor_ctr_done)
+                if (work_factor_ctr_reg < work_factor_num)
                   begin
                     w_init              = 1'b1;
                     state_init          = 1'b1;
