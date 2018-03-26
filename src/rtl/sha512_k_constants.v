@@ -142,7 +142,7 @@ module sha512_k_constants(
 
         default:
           begin
-            tmp_K = 64'h0000000000000000;
+            tmp_K = 64'h0;
           end
       endcase // case (addr)
     end // block: addr_mux

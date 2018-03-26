@@ -298,14 +298,14 @@ module sha512_core(
   //----------------------------------------------------------------
   always @*
     begin : digest_logic
-      H0_new = 64'h00000000;
-      H1_new = 64'h00000000;
-      H2_new = 64'h00000000;
-      H3_new = 64'h00000000;
-      H4_new = 64'h00000000;
-      H5_new = 64'h00000000;
-      H6_new = 64'h00000000;
-      H7_new = 64'h00000000;
+      H0_new = 64'h0;
+      H1_new = 64'h0;
+      H2_new = 64'h0;
+      H3_new = 64'h0;
+      H4_new = 64'h0;
+      H5_new = 64'h0;
+      H6_new = 64'h0;
+      H7_new = 64'h0;
       H_we = 0;
 
       if (digest_init)
@@ -384,14 +384,14 @@ module sha512_core(
   //----------------------------------------------------------------
   always @*
     begin : state_logic
-      a_new  = 64'h00000000;
-      b_new  = 64'h00000000;
-      c_new  = 64'h00000000;
-      d_new  = 64'h00000000;
-      e_new  = 64'h00000000;
-      f_new  = 64'h00000000;
-      g_new  = 64'h00000000;
-      h_new  = 64'h00000000;
+      a_new  = 64'h0;
+      b_new  = 64'h0;
+      c_new  = 64'h0;
+      d_new  = 64'h0;
+      e_new  = 64'h0;
+      f_new  = 64'h0;
+      g_new  = 64'h0;
+      h_new  = 64'h0;
       a_h_we = 0;
 
       if (state_init)
