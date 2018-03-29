@@ -1,0 +1,50 @@
+CAPI=2:
+name : ::sha512:0
+
+filesets:
+  rtl:
+    files:
+      - src/rtl/sha512_k_constants.v
+      - src/rtl/sha512.v
+      - src/rtl/sha512_w_mem.v
+      - src/rtl/sha512_core.v
+      - src/rtl/sha512_h_constants.v
+    file_type : verilogSource
+  tb_sha512:
+    files:
+      - src/tb/tb_sha512.v
+    file_type : verilogSource
+  tb_sha512_core:
+    files:
+      - src/tb/tb_sha512_core.v
+    file_type : verilogSource
+
+targets:
+  default:
+    filesets : [rtl]
+
+  tb_sha512:
+    default_tool : icarus
+    filesets     : [rtl, tb_sha512]
+    parameters   : [DEBUG]
+    toplevel     : [tb_sha512]
+
+  tb_sha512_core:
+    default_tool : icarus
+    filesets     : [rtl, tb_sha512_core]
+    parameters   : [DEBUG]
+    toplevel     : [tb_sha512_core]
+
+  lint:
+    default_tool : verilator
+    filesets : [rtl]
+    tools:
+      verilator:
+        mode : lint-only
+    toplevel : [sha512]
+
+parameters:
+  DEBUG:
+    datatype    : bool
+    description : Enable debug printouts
+    paramtype   : vlogparam
