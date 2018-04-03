@@ -161,8 +161,8 @@ module tb_sha512_core();
                dut.state_init, dut.state_update);
       $display("first_block     = 0x%01x, ready_reg    = 0x%01x, w_init    = 0x%01x",
                dut.first_block, dut.ready_reg, dut.w_init);
-      $display("t_ctr_inc       = 0x%01x, t_ctr_rst     = 0x%01x, t_ctr_reg = 0x%02x",
-               dut.t_ctr_inc, dut.t_ctr_rst, dut.t_ctr_reg);
+      $display("round_ctr_inc       = 0x%01x, round_ctr_rst     = 0x%01x, round_ctr_reg = 0x%02x",
+               dut.round_ctr_inc, dut.round_ctr_rst, dut.round_ctr_reg);
       $display("");
 
       $display("State registers:");

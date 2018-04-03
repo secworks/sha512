@@ -105,11 +105,11 @@ module sha512_core(
   reg [63 : 0] H7_new;
   reg          H_we;
 
-  reg [6 : 0]  t_ctr_reg;
-  reg [6 : 0]  t_ctr_new;
-  reg          t_ctr_we;
-  reg          t_ctr_inc;
-  reg          t_ctr_rst;
+  reg [6 : 0]  round_ctr_reg;
+  reg [6 : 0]  round_ctr_new;
+  reg          round_ctr_we;
+  reg          round_ctr_inc;
+  reg          round_ctr_rst;
 
   reg [31 : 0] work_factor_ctr_reg;
   reg [31 : 0] work_factor_ctr_new;
@@ -164,7 +164,7 @@ module sha512_core(
   // Module instantiantions.
   //----------------------------------------------------------------
   sha512_k_constants k_constants_inst(
-                                      .addr(t_ctr_reg),
+                                      .addr(round_ctr_reg),
                                       .K(k_data)
                                      );
 
@@ -235,7 +235,7 @@ module sha512_core(
           work_factor_ctr_reg <= 32'h0;
           ready_reg           <= 1'b1;
           digest_valid_reg    <= 1'b0;
-          t_ctr_reg           <= 7'h0;
+          round_ctr_reg       <= 7'h0;
           sha512_ctrl_reg     <= CTRL_IDLE;
         end
 
@@ -265,9 +265,9 @@ module sha512_core(
               H7_reg <= H7_new;
             end
 
-          if (t_ctr_we)
+          if (round_ctr_we)
             begin
-              t_ctr_reg <= t_ctr_new;
+              round_ctr_reg <= round_ctr_new;
             end
 
           if (work_factor_ctr_we)
@@ -438,28 +438,28 @@ module sha512_core(
 
 
   //----------------------------------------------------------------
-  // t_ctr
+  // round_ctr
   //
   // Update logic for the round counter, a monotonically
   // increasing counter with reset.
   //----------------------------------------------------------------
   always @*
-    begin : t_ctr
-      t_ctr_new = 7'h00;
-      t_ctr_we  = 0;
+    begin : round_ctr
+      round_ctr_new = 7'h00;
+      round_ctr_we  = 0;
 
-      if (t_ctr_rst)
+      if (round_ctr_rst)
         begin
-          t_ctr_new = 7'h00;
-          t_ctr_we  = 1;
+          round_ctr_new = 7'h00;
+          round_ctr_we  = 1;
         end
 
-      if (t_ctr_inc)
+      if (round_ctr_inc)
         begin
-          t_ctr_new = t_ctr_reg + 1'b1;
-          t_ctr_we  = 1;
+          round_ctr_new = round_ctr_reg + 1'b1;
+          round_ctr_we  = 1;
         end
-    end // t_ctr
+    end // round_ctr
 
 
   //----------------------------------------------------------------
@@ -500,8 +500,8 @@ module sha512_core(
       first_block         = 1'b0;
       w_init              = 1'b0;
       w_next              = 1'b0;
-      t_ctr_inc           = 1'b0;
-      t_ctr_rst           = 1'b0;
+      round_ctr_inc       = 1'b0;
+      round_ctr_rst       = 1'b0;
       digest_valid_new    = 1'b0;
       digest_valid_we     = 1'b0;
       work_factor_ctr_rst = 1'b0;
@@ -523,7 +523,7 @@ module sha512_core(
                 w_init              = 1;
                 state_init          = 1;
                 first_block         = 1;
-                t_ctr_rst           = 1;
+                round_ctr_rst       = 1;
                 digest_valid_new    = 0;
                 digest_valid_we     = 1;
                 sha512_ctrl_new     = CTRL_ROUNDS;
@@ -537,7 +537,7 @@ module sha512_core(
                 work_factor_ctr_rst = 1;
                 w_init              = 1;
                 state_init          = 1;
-                t_ctr_rst           = 1;
+                round_ctr_rst       = 1;
                 digest_valid_new    = 0;
                 digest_valid_we     = 1;
                 sha512_ctrl_new     = CTRL_ROUNDS;
@@ -548,11 +548,11 @@ module sha512_core(
 
         CTRL_ROUNDS:
           begin
-            w_next       = 1;
-            state_update = 1;
-            t_ctr_inc    = 1;
+            w_next        = 1;
+            state_update  = 1;
+            round_ctr_inc = 1;
 
-            if (t_ctr_reg == SHA512_ROUNDS)
+            if (round_ctr_reg == SHA512_ROUNDS)
               begin
                 work_factor_ctr_inc = 1;
                 sha512_ctrl_new     = CTRL_DONE;
@@ -569,7 +569,7 @@ module sha512_core(
                   begin
                     w_init              = 1'b1;
                     state_init          = 1'b1;
-                    t_ctr_rst           = 1'b1;
+                    round_ctr_rst       = 1'b1;
                     sha512_ctrl_new     = CTRL_ROUNDS;
                     sha512_ctrl_we      = 1'b1;
                   end
