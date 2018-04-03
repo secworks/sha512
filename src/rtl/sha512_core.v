@@ -266,27 +266,19 @@ module sha512_core(
             end
 
           if (round_ctr_we)
-            begin
-              round_ctr_reg <= round_ctr_new;
-            end
+            round_ctr_reg <= round_ctr_new;
 
           if (work_factor_ctr_we)
-            begin
-              work_factor_ctr_reg <= work_factor_ctr_new;
-            end
+            work_factor_ctr_reg <= work_factor_ctr_new;
 
           if (ready_we)
             ready_reg <= ready_new;
 
           if (digest_valid_we)
-            begin
-              digest_valid_reg <= digest_valid_new;
-            end
+            digest_valid_reg <= digest_valid_new;
 
           if (sha512_ctrl_we)
-            begin
-              sha512_ctrl_reg <= sha512_ctrl_new;
-            end
+            sha512_ctrl_reg <= sha512_ctrl_new;
         end
     end // reg_update
 
