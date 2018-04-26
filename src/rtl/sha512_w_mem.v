@@ -81,12 +81,6 @@ module sha512_w_mem(
   reg [6 : 0] w_ctr_reg;
   reg [6 : 0] w_ctr_new;
   reg         w_ctr_we;
-  reg         w_ctr_inc;
-  reg         w_ctr_rst;
-
-  reg         sha512_w_mem_ctrl_reg;
-  reg         sha512_w_mem_ctrl_new;
-  reg         sha512_w_mem_ctrl_we;
 
 
   //----------------------------------------------------------------
@@ -117,8 +111,7 @@ module sha512_w_mem(
           for (i = 0; i < 16; i = i + 1)
             w_mem[i] <= 64'h0;
 
-          w_ctr_reg             <= 7'h00;
-          sha512_w_mem_ctrl_reg <= CTRL_IDLE;
+          w_ctr_reg <= 7'h0;
         end
       else
         begin
@@ -144,9 +137,6 @@ module sha512_w_mem(
 
           if (w_ctr_we)
               w_ctr_reg <= w_ctr_new;
-
-          if (sha512_w_mem_ctrl_we)
-              sha512_w_mem_ctrl_reg <= sha512_w_mem_ctrl_new;
         end
     end // reg_update
 
@@ -160,13 +150,9 @@ module sha512_w_mem(
   always @*
     begin : select_w
       if (w_ctr_reg < 16)
-        begin
-          w_tmp = w_mem[w_ctr_reg[3 : 0]];
-        end
+        w_tmp = w_mem[w_ctr_reg[3 : 0]];
       else
-        begin
-          w_tmp = w_new;
-        end
+        w_tmp = w_new;
     end // select_w
 
 
@@ -185,22 +171,22 @@ module sha512_w_mem(
       reg [63 : 0] d0;
       reg [63 : 0] d1;
 
-      w_mem00_new = 64'h0000000000000000;
-      w_mem01_new = 64'h0000000000000000;
-      w_mem02_new = 64'h0000000000000000;
-      w_mem03_new = 64'h0000000000000000;
-      w_mem04_new = 64'h0000000000000000;
-      w_mem05_new = 64'h0000000000000000;
-      w_mem06_new = 64'h0000000000000000;
-      w_mem07_new = 64'h0000000000000000;
-      w_mem08_new = 64'h0000000000000000;
-      w_mem09_new = 64'h0000000000000000;
-      w_mem10_new = 64'h0000000000000000;
-      w_mem11_new = 64'h0000000000000000;
-      w_mem12_new = 64'h0000000000000000;
-      w_mem13_new = 64'h0000000000000000;
-      w_mem14_new = 64'h0000000000000000;
-      w_mem15_new = 64'h0000000000000000;
+      w_mem00_new = 64'h0;
+      w_mem01_new = 64'h0;
+      w_mem02_new = 64'h0;
+      w_mem03_new = 64'h0;
+      w_mem04_new = 64'h0;
+      w_mem05_new = 64'h0;
+      w_mem06_new = 64'h0;
+      w_mem07_new = 64'h0;
+      w_mem08_new = 64'h0;
+      w_mem09_new = 64'h0;
+      w_mem10_new = 64'h0;
+      w_mem11_new = 64'h0;
+      w_mem12_new = 64'h0;
+      w_mem13_new = 64'h0;
+      w_mem14_new = 64'h0;
+      w_mem15_new = 64'h0;
       w_mem_we    = 0;
 
       w_0  = w_mem[0];
@@ -238,7 +224,8 @@ module sha512_w_mem(
           w_mem15_new = block[63   :   0];
           w_mem_we    = 1;
         end
-      else if (w_ctr_reg > 15)
+
+      if (next && (w_ctr_reg > 15))
         begin
           w_mem00_new = w_mem[01];
           w_mem01_new = w_mem[02];
@@ -268,61 +255,21 @@ module sha512_w_mem(
   //----------------------------------------------------------------
   always @*
     begin : w_ctr
-      w_ctr_new = 7'h00;
-      w_ctr_we  = 0;
+      w_ctr_new = 7'h0;
+      w_ctr_we  = 1'h0;
 
-      if (w_ctr_rst)
+      if (init)
         begin
           w_ctr_new = 7'h00;
-          w_ctr_we  = 1;
+          w_ctr_we  = 1'h1;
         end
 
-      if (w_ctr_inc)
+      if (next)
         begin
           w_ctr_new = w_ctr_reg + 7'h01;
-          w_ctr_we  = 1;
+          w_ctr_we  = 1'h1;
         end
     end // w_ctr
-
-
-  //----------------------------------------------------------------
-  // sha512_w_mem_fsm
-  // Logic for the w shedule FSM.
-  //----------------------------------------------------------------
-  always @*
-    begin : sha512_w_mem_fsm
-      w_ctr_rst = 0;
-      w_ctr_inc = 0;
-
-      sha512_w_mem_ctrl_new = CTRL_IDLE;
-      sha512_w_mem_ctrl_we  = 0;
-
-      case (sha512_w_mem_ctrl_reg)
-        CTRL_IDLE:
-          begin
-            if (init)
-              begin
-                w_ctr_rst             = 1;
-                sha512_w_mem_ctrl_new = CTRL_UPDATE;
-                sha512_w_mem_ctrl_we  = 1;
-              end
-          end
-
-        CTRL_UPDATE:
-          begin
-            if (next)
-              begin
-                w_ctr_inc = 1;
-              end
-
-            if (w_ctr_reg == 7'h3f)
-              begin
-                sha512_w_mem_ctrl_new = CTRL_IDLE;
-                sha512_w_mem_ctrl_we  = 1;
-              end
-          end
-      endcase // case (sha512_ctrl_reg)
-    end // sha512_ctrl_fsm
 
 endmodule // sha512_w_mem
 
