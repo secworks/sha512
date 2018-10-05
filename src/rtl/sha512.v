@@ -134,8 +134,8 @@ module sha512(
   wire            core_digest_valid;
   reg [4 : 0]     block_addr;
 
-  reg [31 : 0] tmp_read_data;
-  reg          tmp_error;
+  reg [31 : 0]    tmp_read_data;
+  reg             tmp_error;
 
 
   //----------------------------------------------------------------
@@ -199,6 +199,9 @@ module sha512(
 
       if (!reset_n)
         begin
+          for (i = 0 ; i < 32 ; i = i + 1)
+            block_reg[i] <= 32'h0;
+
           init_reg            <= 0;
           next_reg            <= 0;
           mode_reg            <= MODE_SHA_512;
@@ -207,9 +210,6 @@ module sha512(
           ready_reg           <= 0;
           digest_reg          <= 512'h0;
           digest_valid_reg    <= 0;
-
-          for (i = 0 ; i < 32 ; i = i + 1)
-            block_reg[i] <= 32'h0;
         end
       else
         begin
@@ -246,7 +246,7 @@ module sha512(
     begin : api_logic
       init_new           = 0;
       next_new           = 0;
-      mode_new           = 2'b00;
+      mode_new           = 2'h0;
       mode_we            = 0;
       work_factor_new    = 0;
       work_factor_we     = 0;
@@ -265,7 +265,6 @@ module sha512(
                 block_we = 1;
 
               case (address)
-                // Write operations.
                 ADDR_CTRL:
                   begin
                     init_new        = write_data[CTRL_INIT_BIT];
