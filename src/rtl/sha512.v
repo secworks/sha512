@@ -123,11 +123,6 @@ module sha512(
   //----------------------------------------------------------------
   // Wires.
   //----------------------------------------------------------------
-  wire            core_init;
-  wire            core_next;
-  wire [1 : 0]    core_mode;
-  wire            core_work_factor;
-  wire [31 : 0]   core_work_factor_num;
   wire            core_ready;
   wire [1023 : 0] core_block;
   wire [511 : 0]  core_digest;
@@ -141,15 +136,6 @@ module sha512(
   //----------------------------------------------------------------
   // Concurrent connectivity for ports etc.
   //----------------------------------------------------------------
-  assign core_init = init_reg;
-
-  assign core_next = next_reg;
-
-  assign core_mode = mode_reg;
-
-  assign core_work_factor = work_factor_reg;
-  assign core_work_factor_num = work_factor_num_reg;
-
   assign core_block = {block_reg[00], block_reg[01], block_reg[02], block_reg[03],
                        block_reg[04], block_reg[05], block_reg[06], block_reg[07],
                        block_reg[08], block_reg[09], block_reg[10], block_reg[11],
@@ -170,12 +156,12 @@ module sha512(
                    .clk(clk),
                    .reset_n(reset_n),
 
-                   .init(core_init),
-                   .next(core_next),
-                   .mode(core_mode),
+                   .init(init_reg),
+                   .next(next_reg),
+                   .mode(mode_reg),
 
-                   .work_factor(core_work_factor),
-                   .work_factor_num(core_work_factor_num),
+                   .work_factor(work_factor_reg),
+                   .work_factor_num(work_factor_num_reg),
 
                    .block(core_block),
 
@@ -244,16 +230,16 @@ module sha512(
   //----------------------------------------------------------------
   always @*
     begin : api_logic
-      init_new           = 0;
-      next_new           = 0;
-      mode_new           = 2'h0;
-      mode_we            = 0;
-      work_factor_new    = 0;
-      work_factor_we     = 0;
-      work_factor_num_we = 0;
-      block_we           = 0;
+      init_new           = 1'h0;
+      next_new           = 1'h0;
+      mode_new           = MODE_SHA_512;
+      mode_we            = 1'h0;
+      work_factor_new    = 1'h0;
+      work_factor_we     = 1'h0;
+      work_factor_num_we = 1'h0;
+      block_we           = 1'h0;
       tmp_read_data      = 32'h0;
-      tmp_error          = 0;
+      tmp_error          = 1'h0;
 
       block_addr = address[4 : 0] - ADDR_BLOCK0[4 : 0];
 
@@ -262,7 +248,7 @@ module sha512(
           if (we)
             begin
               if ((address >= ADDR_BLOCK0) && (address <= ADDR_BLOCK31))
-                block_we = 1;
+                block_we = 1'h1;
 
               case (address)
                 ADDR_CTRL:
@@ -270,18 +256,16 @@ module sha512(
                     init_new        = write_data[CTRL_INIT_BIT];
                     next_new        = write_data[CTRL_NEXT_BIT];
                     mode_new        = write_data[CTRL_MODE_HIGH_BIT : CTRL_MODE_LOW_BIT];
-                    mode_we         = 1;
+                    mode_we         = 1'h1;
                     work_factor_new = write_data[CTRL_WORK_FACTOR_BIT];
-                    work_factor_we  = 1;
+                    work_factor_we  = 1'h1;
                   end
 
                 ADDR_WORK_FACTOR_NUM:
-                  work_factor_num_we = 1;
+                  work_factor_num_we = 1'h1;
 
                 default:
-                  begin
-                    tmp_error = 1;
-                  end
+                    tmp_error = 1'h1;
               endcase // case (address)
             end // if (we)
 
@@ -294,7 +278,6 @@ module sha512(
                 tmp_read_data = block_reg[address[4 : 0]];
 
               case (address)
-                // Read operations.
                 ADDR_NAME0:
                   tmp_read_data = CORE_NAME0;
 
@@ -314,9 +297,7 @@ module sha512(
                   tmp_read_data = work_factor_num_reg;
 
                 default:
-                  begin
-                    tmp_error = 1;
-                  end
+                  tmp_error = 1'h1;
               endcase // case (address)
             end
         end
