@@ -188,14 +188,14 @@ module sha512(
           for (i = 0 ; i < 32 ; i = i + 1)
             block_reg[i] <= 32'h0;
 
-          init_reg            <= 0;
-          next_reg            <= 0;
+          init_reg            <= 1'h0;
+          next_reg            <= 1'h0;
           mode_reg            <= MODE_SHA_512;
-          work_factor_reg     <= 0;
+          work_factor_reg     <= 1'h0;
           work_factor_num_reg <= DEFAULT_WORK_FACTOR_NUM;
-          ready_reg           <= 0;
+          ready_reg           <= 1'h0;
           digest_reg          <= 512'h0;
-          digest_valid_reg    <= 0;
+          digest_valid_reg    <= 1'h0;
         end
       else
         begin
