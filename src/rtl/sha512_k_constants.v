@@ -141,9 +141,7 @@ module sha512_k_constants(
         79: tmp_K = 64'h6c44198c4a475817;
 
         default:
-          begin
-            tmp_K = 64'h0;
-          end
+          tmp_K = 64'h0;
       endcase // case (addr)
     end // block: addr_mux
 endmodule // sha512_k_constants
