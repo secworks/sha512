@@ -1,5 +1,5 @@
 CAPI=2:
-name : ::sha512:0
+name : secworks:crypto:sha512:0
 
 filesets:
   rtl:
@@ -18,6 +18,9 @@ filesets:
     files:
       - src/tb/tb_sha512_core.v
     file_type : verilogSource
+  openlane:
+    files:
+      - src/data/openlane_params.tcl : {file_type : tclSource}
 
 targets:
   default:
@@ -42,6 +45,12 @@ targets:
       verilator:
         mode : lint-only
     toplevel : [sha512]
+
+  sky130:
+    default_tool : openlane
+    filesets : [rtl, openlane]
+    toplevel : sha512
+
 
 parameters:
   DEBUG:
