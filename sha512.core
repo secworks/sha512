@@ -4,11 +4,11 @@ name : secworks:crypto:sha512:0
 filesets:
   rtl:
     files:
-      - src/rtl/sha512_k_constants.v
       - src/rtl/sha512.v
-      - src/rtl/sha512_w_mem.v
       - src/rtl/sha512_core.v
       - src/rtl/sha512_h_constants.v
+      - src/rtl/sha512_k_constants.v
+      - src/rtl/sha512_w_mem.v
     file_type : verilogSource
   tb_sha512:
     files:

@@ -51,7 +51,7 @@ Run with modelsim instead of default tool (icarus)
 fusesoc run --target=tb_sha512 --tool=modelsim secworks:crypto:sha512
 ~~~
 
-## FPGA-results ##
+## Implementation results
 
 ### Xilinx FPGAs ###
 Implementation results using ISE 14.7.
