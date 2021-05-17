@@ -61,11 +61,11 @@ module sha512_core(
   //----------------------------------------------------------------
   // Internal constant and parameter definitions.
   //----------------------------------------------------------------
-  parameter SHA512_ROUNDS = 79;
+  localparam SHA512_ROUNDS = 79;
 
-  parameter CTRL_IDLE   = 0;
-  parameter CTRL_ROUNDS = 1;
-  parameter CTRL_DONE   = 2;
+  localparam CTRL_IDLE   = 2'h0;
+  localparam CTRL_ROUNDS = 2'h1;
+  localparam CTRL_DONE   = 2'h2;
 
 
   //----------------------------------------------------------------
@@ -589,6 +589,12 @@ module sha512_core(
                 sha512_ctrl_we   = 1'b1;
               end
           end
+
+
+        default:
+          begin
+          end
+
       endcase // case (sha512_ctrl_reg)
     end // sha512_ctrl_fsm
 

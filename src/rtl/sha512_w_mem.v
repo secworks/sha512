@@ -52,13 +52,6 @@ module sha512_w_mem(
 
 
   //----------------------------------------------------------------
-  // Internal constant and parameter definitions.
-  //----------------------------------------------------------------
-  parameter CTRL_IDLE   = 1'b0;
-  parameter CTRL_UPDATE = 1'b1;
-
-
-  //----------------------------------------------------------------
   // Registers including update variables and write enable.
   //----------------------------------------------------------------
   reg [63 : 0] w_mem [0 : 15];
