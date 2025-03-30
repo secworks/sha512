@@ -1,14 +1,21 @@
 sha512
 ======
+## Status ##
+The core is completed and is considered mature. The core has been used
+in more than one FPGA design.
+
+## Introduction
 Verilog implementation of the SHA-512 hash function. This implementation
 complies with the functionality in NIST FIPS 180-4. The implementation
 supports the SHA-512 variants SHA-512/224, SHA-512/256, SHA-384 and
 SHA-512.
 
+### Contact information ##
 
-## Status ##
-The core is completed and is considered mature. The core has been used
-in more than one FPGA design.
+Assured provides customer support including customization, integration
+and system development related to the core. For more informantion,
+please contact [Assured Security
+Consultants](https://www.assured.se/contact).
 
 
 ## Implementation details ##
