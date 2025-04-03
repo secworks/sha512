@@ -13,7 +13,7 @@ SHA-512.
 ### Contact information ##
 
 Assured provides customer support including customization, integration
-and system development related to the core. For more informantion,
+and system development related to the core. For more information,
 please contact [Assured Security
 Consultants](https://www.assured.se/contact).
 
