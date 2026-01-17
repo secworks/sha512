@@ -1,5 +1,7 @@
 CAPI=2:
-name : secworks:crypto:sha512:0
+name: secworks:crypto:sha512:1.0.0
+description: Verilog implementation of the SHA-512 hash function.
+license: BSD-2-Clause
 
 filesets:
   rtl:
